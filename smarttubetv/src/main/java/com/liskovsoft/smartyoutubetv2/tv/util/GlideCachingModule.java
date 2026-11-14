@@ -13,7 +13,8 @@ import com.bumptech.glide.module.AppGlideModule;
  */
 @GlideModule
 public class GlideCachingModule extends AppGlideModule {
-    private final static long CACHE_SIZE = 10 * 1024 * 1024; // 10 MB
+    private final static long CACHE_SIZE = 32 * 1024 * 1024; // MyTube: 32 MB of downsampled thumbnails (~1000 cards)
+    private final static long LOW_RAM_THRESHOLD = 2_500L * 1024 * 1024;
 
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
@@ -22,5 +23,16 @@ public class GlideCachingModule extends AppGlideModule {
 
         // Limit cache size
         builder.setDiskCache(new InternalCacheDiskCacheFactory(context, CACHE_SIZE));
+
+        // MyTube: on low-RAM devices (Fire TV Stick 4K) keep Glide's in-memory pools small. Defaults on API < 26 are
+        // 2 screens of memory cache + 4 screens of bitmap pool (~50MB at 1080p ARGB). Thumbnails are RGB_565 now,
+        // so 1.5 screens still hold several rows of cards.
+        long ram = com.liskovsoft.sharedutils.helpers.DeviceHelpers.getDeviceRam(context);
+        if (ram > 0 && ram < LOW_RAM_THRESHOLD) {
+            builder.setMemorySizeCalculator(new com.bumptech.glide.load.engine.cache.MemorySizeCalculator.Builder(context)
+                    .setMemoryCacheScreens(1.5f)
+                    .setBitmapPoolScreens(1.5f)
+                    .build());
+        }
     }
 }

@@ -145,7 +145,7 @@ public class StoryboardManager {
         Glide.with(mContext)
                 .asBitmap()
                 .load(mStoryboard.getGroupUrl(groupNum))
-                .apply(ViewUtil.glideOptions())
+                .apply(ViewUtil.thumbnailOptions()) // MyTube: cache storyboard sheets, seeking re-uses them
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .transform(transformation)
                 .into(new CustomTarget<Bitmap>() {

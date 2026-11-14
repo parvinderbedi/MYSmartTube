@@ -28,7 +28,14 @@ import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
 import java.util.UUID;
 
 public class ExoPlayerInitializer {
+    /** MyTube: devices below this total RAM get a capped buffer (e.g. Fire TV Stick 4K: 1.5-2GB, ~400MB free) */
+    private static final long LOW_RAM_THRESHOLD = 2_500L * 1024 * 1024;
+    /** MyTube: max bytes held by the player buffer on low-RAM devices (~50s of 1080p60 VP9, ~20s of 4K60) */
+    private static final int LOW_RAM_MAX_BUFFER_BYTES = 48 * 1024 * 1024;
+    /** MyTube: back buffer keeps already played media in RAM. Keep it short on low-RAM devices. */
+    private static final int LOW_RAM_BACK_BUFFER_MS = 15_000;
     private final int mMaxBufferBytes;
+    private final boolean mIsLowRam;
     private final PlayerData mPlayerData;
     private final PlayerTweaksData mPlayerTweaksData;
     private VolumeBooster mVolumeBooster;
@@ -45,7 +52,10 @@ public class ExoPlayerInitializer {
         // If ram is too big, bigger then max int value DeviceRam will return a negative number...
         // use 196MB as that can only happens if device has more than 17GB of RAM, so 196 is enough and safe
         // https://github.com/yuliskov/SmartYouTubeTV/issues/532
-        mMaxBufferBytes = deviceRam <= 0 ? 196_000_000 : (int)(deviceRam / 18);
+        mIsLowRam = deviceRam > 0 && deviceRam < LOW_RAM_THRESHOLD;
+        int maxBufferBytes = deviceRam <= 0 ? 196_000_000 : (int)(deviceRam / 18);
+        // MyTube: moderate buffer on low-RAM devices to avoid OOM kills during long sessions
+        mMaxBufferBytes = mIsLowRam ? Math.min(maxBufferBytes, LOW_RAM_MAX_BUFFER_BYTES) : maxBufferBytes;
     }
 
     public SimpleExoPlayer createPlayer(Context context, DefaultRenderersFactory renderersFactory, DefaultTrackSelector trackSelector) {
@@ -120,12 +130,15 @@ public class ExoPlayerInitializer {
                 //maxBufferMs = 36_000_000; // technical infinity, recommended here a very high number, the max will be based on setTargetBufferBytes() value
                 baseBuilder
                         .setTargetBufferBytes(mMaxBufferBytes);
-                baseBuilder.setBackBuffer(minBufferMs, true);
+                baseBuilder.setBackBuffer(mIsLowRam ? LOW_RAM_BACK_BUFFER_MS : minBufferMs, true);
                 break;
             case PlayerData.BUFFER_HIGH:
                 minBufferMs = 50_000;
                 maxBufferMs = 50_000;
-                baseBuilder.setBackBuffer(minBufferMs, true);
+                if (mIsLowRam) {
+                    baseBuilder.setTargetBufferBytes(mMaxBufferBytes); // bytes cap wins over duration
+                }
+                baseBuilder.setBackBuffer(mIsLowRam ? LOW_RAM_BACK_BUFFER_MS : minBufferMs, true);
                 break;
             case PlayerData.BUFFER_MEDIUM:
                 //minBufferMs = 30_000;

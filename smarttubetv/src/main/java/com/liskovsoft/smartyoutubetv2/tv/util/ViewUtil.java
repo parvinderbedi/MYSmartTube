@@ -172,6 +172,19 @@ public class ViewUtil {
         return true;
     }
 
+    /**
+     * MyTube: options for static thumbnails (video/channel cards, storyboard seek previews).
+     * Unlike {@link #glideOptions()} (meant for animated images) these keep the memory cache and store the
+     * downsampled result on disk, decode as RGB_565 (half the memory of ARGB_8888, thumbnails have no alpha)
+     * and skip the cross-fade so scrolling never waits on an animation.
+     */
+    public static RequestOptions thumbnailOptions() {
+        return new RequestOptions()
+                .diskCacheStrategy(android.os.Build.VERSION.SDK_INT > 21 ? DiskCacheStrategy.RESOURCE : DiskCacheStrategy.NONE)
+                .format(com.bumptech.glide.load.DecodeFormat.PREFER_RGB_565)
+                .dontAnimate();
+    }
+
     public static RequestOptions glideOptions() {
         return new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.NONE) // ensure start animation from beginning
