@@ -16,6 +16,8 @@ public class CustomVerticalGridPresenter extends VerticalGridPresenter {
 
     public CustomVerticalGridPresenter(int layoutResId, int rootResId) {
         super(ViewUtil.FOCUS_ZOOM_FACTOR, ViewUtil.FOCUS_DIMMER_ENABLED);
+        // MyTube: no dynamic shadows (elevation animation on every focus change is costly on Fire TV GPUs)
+        setShadowEnabled(false);
 
         mLayoutResId = layoutResId;
         mRootResId = rootResId;

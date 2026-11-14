@@ -108,9 +108,6 @@
     <dimen name="lb_basic_card_main_height">188dp</dimen>
     <dimen name="lb_basic_card_info_height">52dp</dimen>
     <dimen name="lb_basic_card_info_padding">6dp</dimen>
-    <dimen name="lb_basic_card_info_text_margin">2dp</dimen>
-    <dimen name="lb_basic_card_title_text_size">16sp</dimen>
-    <dimen name="lb_basic_card_content_text_size">12sp</dimen>
     <dimen name="lb_basic_card_info_badge_size">16dp</dimen>
 
     <!-- Elements below aren't used in the app -->
@@ -134,4 +131,18 @@
     <dimen name="tooltip_vertical_padding_mod">6.5dp</dimen>
     <dimen name="tooltip_y_offset_non_touch_mod">0dp</dimen>
     <dimen name="tooltip_y_offset_touch_mod">16dp</dimen>
+
+    <!-- MyTube: larger card text, readable from ~3m on a 1080p TV (sp x2 = px at 320dpi) -->
+    <dimen name="lb_basic_card_title_text_size">17sp</dimen>
+    <dimen name="lb_basic_card_content_text_size">14sp</dimen>
+    <!-- Text aligned with thumbnail edge, like the TV home grid -->
+    <dimen name="lb_basic_card_info_padding_horizontal">2dp</dimen>
+    <dimen name="lb_basic_card_info_padding_top">10dp</dimen>
+    <dimen name="lb_basic_card_info_padding_bottom">6dp</dimen>
+    <dimen name="lb_basic_card_info_text_margin">4dp</dimen>
+    <!-- Sidebar labels -->
+    <dimen name="lb_browse_header_text_size">22sp</dimen>
+    <!-- Focus ring around thumbnails -->
+    <dimen name="mytube_focus_ring_width">3dp</dimen>
+    <dimen name="mytube_corner_radius">8dp</dimen>
 </resources>

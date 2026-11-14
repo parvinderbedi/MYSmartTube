@@ -39,6 +39,8 @@ public class VideoCardPresenter extends LongClickPresenter {
     private int mDefaultTextColor = -1;
     private int mSelectedBackgroundColor = -1;
     private int mSelectedTextColor = -1;
+    private int mSecondaryTextColor = -1;
+    private Drawable mFocusRing;
     private int mCardPreviewType;
     private int mThumbQuality;
     private int mWidth;
@@ -54,8 +56,13 @@ public class VideoCardPresenter extends LongClickPresenter {
                 ContextCompat.getColor(context, R.color.card_default_text);
         mSelectedBackgroundColor =
                 ContextCompat.getColor(context, Helpers.getThemeAttr(context, R.attr.cardSelectedBackground));
-        mSelectedTextColor =
+        // MyTube: keep text readable whatever the scheme. Dark selected background -> light text.
+        mSelectedTextColor = isDarkColor(mSelectedBackgroundColor) ?
+                ContextCompat.getColor(context, R.color.mytube_text_primary) :
                 ContextCompat.getColor(context, R.color.card_selected_text_grey);
+        mSecondaryTextColor = isDarkColor(mDefaultBackgroundColor) ?
+                ContextCompat.getColor(context, R.color.mytube_text_secondary) : mDefaultTextColor;
+        mFocusRing = ContextCompat.getDrawable(context, R.drawable.mytube_focus_ring);
 
         mCardPreviewType = getCardPreviewType(context);
         mThumbQuality = getThumbQuality(context);
@@ -71,6 +78,7 @@ public class VideoCardPresenter extends LongClickPresenter {
             @Override
             public void setSelected(boolean selected) {
                 updateCardBackgroundColor(this, selected);
+                updateFocusRing(this, selected);
                 super.setSelected(selected);
             }
         };
@@ -112,8 +120,27 @@ public class VideoCardPresenter extends LongClickPresenter {
         }
         TextView contentText = view.findViewById(R.id.content_text);
         if (contentText != null) {
-            contentText.setTextColor(textColor);
+            // Metadata line (channel, views, age) is secondary unless the card is highlighted with a light bg
+            contentText.setTextColor(selected && !isDarkColor(backgroundColor) ? textColor : mSecondaryTextColor);
         }
+    }
+
+    /**
+     * MyTube: flat focus highlight - a single stroke drawn as the thumbnail's foreground.
+     * Cheaper than shadows/dimmers (no extra layers, no elevation animation).
+     */
+    private void updateFocusRing(ComplexImageCardView view, boolean selected) {
+        if (VERSION.SDK_INT < 23) {
+            return; // View.setForeground on non-FrameLayout views requires API 23
+        }
+        View imageWrapper = view.findViewById(R.id.main_image_wrapper);
+        if (imageWrapper != null) {
+            imageWrapper.setForeground(selected ? mFocusRing : null);
+        }
+    }
+
+    private static boolean isDarkColor(int color) {
+        return androidx.core.graphics.ColorUtils.calculateLuminance(color) < 0.4;
     }
 
     @Override

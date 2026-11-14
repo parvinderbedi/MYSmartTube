@@ -104,6 +104,37 @@
     </style>
     <!-- End Color scheme: Teal (Default) -->
 
+    <!--  Color scheme: MyTube (default). Flat dark UI, text under thumbnails, white focus ring, teal accent. -->
+    <style name="App.Theme.MyTube.Player" parent="App.Theme.Leanback.Player">
+        <item name="playbackProgressPrimaryColor">@color/mytube_accent</item>
+        <item name="playbackProgressSecondaryColor">@color/white_20</item>
+        <item name="playbackControlsIconHighlightColor">@color/mytube_text_primary</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.MyTube</item>
+        <item name="shelfBackground">@color/mytube_bg</item>
+        <item name="cardDefaultBackground">@color/mytube_bg</item>
+        <item name="cardSelectedBackground">@color/mytube_bg</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/mytube_accent</item>
+    </style>
+    <style name="App.Theme.MyTube.Browse" parent="App.Theme.Leanback.Browse">
+        <item name="android:windowBackground">@color/mytube_bg</item>
+        <item name="brandColor">@color/mytube_bg</item>
+        <item name="brandAccentColor">@color/mytube_accent</item>
+        <item name="shelfBackground">@color/mytube_bg</item>
+        <item name="cardDefaultBackground">@color/mytube_bg</item>
+        <item name="cardSelectedBackground">@color/mytube_bg</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.MyTube</item>
+        <item name="appLogo">@mipmap/app_logo</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/mytube_accent</item>
+    </style>
+    <style name="App.Theme.MyTube.Preferences" parent="App.Theme.Leanback.Preferences">
+        <item name="android:colorPrimary" tools:targetApi="21">@color/mytube_surface</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/mytube_accent</item>
+    </style>
+    <style name="ProgressBarHorizontal.MyTube" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_bar_mytube</item>
+    </style>
+    <!--  End Color scheme: MyTube  -->
+
     <!--  Color scheme: Dark Grey  -->
     <style name="App.Theme.DarkGrey.Player" parent="App.Theme.Leanback.Player">
         <item name="playbackProgressPrimaryColor">@color/red</item>

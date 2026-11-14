@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MyTube: flat focus highlight for thumbnails (no shadow/glow/blur, single stroke). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@android:color/transparent" />
+    <stroke android:width="@dimen/mytube_focus_ring_width" android:color="@color/mytube_focus_ring" />
+    <corners android:radius="@dimen/mytube_corner_radius" />
+</shape>
