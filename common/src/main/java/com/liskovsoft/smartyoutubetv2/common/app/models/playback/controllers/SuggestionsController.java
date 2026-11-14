@@ -409,7 +409,8 @@ public class SuggestionsController extends BasePlayerController {
                 VideoGroup videoGroup = VideoGroup.from(group);
 
                 if (TextUtils.isEmpty(videoGroup.getTitle())) {
-                    videoGroup.setTitle(getContext().getString(R.string.suggestions));
+                    // MyTube: TV-style label for the related videos row
+                    videoGroup.setTitle(getContext().getString(R.string.mytube_up_next));
                     if (getPlayerTweaksData().isSuggestionsHorizontallyScrolled()) {
                         videoGroup.setId(videoGroup.getTitle().hashCode()); // merge by the id
                     }

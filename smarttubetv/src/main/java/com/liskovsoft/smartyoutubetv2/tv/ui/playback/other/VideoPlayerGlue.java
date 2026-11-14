@@ -136,63 +136,20 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
         putAction(new SoundOffAction(context));
     }
 
+    /**
+     * MyTube: TV-style main control row. Play/Pause, Next, Captions, Quality, Speed.
+     * Every other control moves to the secondary row (nothing removed, settings toggles still apply).
+     */
     @Override
     protected void onCreatePrimaryActions(ArrayObjectAdapter adapter) {
         // Order matters, super.onCreatePrimaryActions() will create the play / pause action.
-        // Will display as follows:
-        // play/pause, previous, rewind, fast forward, next
-        //   > /||      |<        <<        >>         >|
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_PLAY_PAUSE)) {
+        if (isEnabled(PlayerTweaksData.PLAYER_BUTTON_PLAY_PAUSE)) {
             super.onCreatePrimaryActions(adapter);
         }
-
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_PREVIOUS)) {
-            adapter.add(mSkipPreviousAction);
-        }
-        //adapter.add(mRewindAction);
-        //adapter.add(mFastForwardAction);
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_NEXT)) {
-            adapter.add(mSkipNextAction);
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_REPEAT_MODE)) {
-            adapter.add(mActions.get(R.id.action_repeat));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_VIDEO_SPEED)) {
-            adapter.add(mActions.get(R.id.action_video_speed));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_PIP)) {
-            adapter.add(mActions.get(R.id.action_pip));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_SCREEN_DIMMING)) {
-            adapter.add(mActions.get(R.id.action_screen_dimming));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_CHAT)) {
-            adapter.add(mActions.get(R.id.action_chat));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_SEARCH)) {
-            adapter.add(mActions.get(R.id.action_search));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_SHARE)) {
-            adapter.add(mActions.get(R.id.action_share));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_SEEK_INTERVAL)) {
-            adapter.add(mActions.get(R.id.action_seek_interval));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_VIDEO_ZOOM)) {
-            adapter.add(mActions.get(R.id.action_video_zoom));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_VIDEO_ROTATE)) {
-            adapter.add(mActions.get(R.id.action_rotate));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_VIDEO_FLIP)) {
-            adapter.add(mActions.get(R.id.action_flip));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_SOUND_OFF)) {
-            adapter.add(mActions.get(R.id.action_sound_off));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_AFR)) {
-            adapter.add(mActions.get(R.id.action_afr));
-        }
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_NEXT, mSkipNextAction);
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SUBTITLES, mActions.get(R.id.lb_control_closed_captioning));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_HIGH_QUALITY, mActions.get(R.id.lb_control_high_quality));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_SPEED, mActions.get(R.id.action_video_speed));
     }
 
     @Override
@@ -204,38 +161,37 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
         // Origin: {@link androidx.leanback.widget.ControlBarPresenter#MAX_CONTROLS}
         // Custom mod: {@link com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.ControlBarPresenter#MAX_CONTROLS}
 
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_HIGH_QUALITY)) {
-            adapter.add(mActions.get(R.id.lb_control_high_quality));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_OPEN_CHANNEL)) {
-            adapter.add(mActions.get(R.id.action_channel));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_LIKE)) {
-            adapter.add(mActions.get(R.id.action_thumbs_up));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_DISLIKE)) {
-            adapter.add(mActions.get(R.id.action_thumbs_down));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_SUBTITLES)) {
-            adapter.add(mActions.get(R.id.lb_control_closed_captioning));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_ADD_TO_PLAYLIST)) {
-            adapter.add(mActions.get(R.id.action_playlist_add));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_SUBSCRIBE)) {
-            adapter.add(mActions.get(R.id.action_subscribe));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_VIDEO_INFO)) {
-            adapter.add(mActions.get(R.id.action_info));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_PLAYBACK_QUEUE)) {
-            adapter.add(mActions.get(R.id.action_playback_queue));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_CONTENT_BLOCK)) {
-            adapter.add(mActions.get(R.id.action_content_block));
-        }
-        if (mPlayerTweaksData.isPlayerButtonEnabled(PlayerTweaksData.PLAYER_BUTTON_VIDEO_STATS)) {
-            adapter.add(mActions.get(R.id.action_video_stats));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_LIKE, mActions.get(R.id.action_thumbs_up));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_DISLIKE, mActions.get(R.id.action_thumbs_down));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SUBSCRIBE, mActions.get(R.id.action_subscribe));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_OPEN_CHANNEL, mActions.get(R.id.action_channel));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_ADD_TO_PLAYLIST, mActions.get(R.id.action_playlist_add));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_PREVIOUS, mSkipPreviousAction);
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_REPEAT_MODE, mActions.get(R.id.action_repeat));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_CHAT, mActions.get(R.id.action_chat));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SEARCH, mActions.get(R.id.action_search));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_PIP, mActions.get(R.id.action_pip));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SCREEN_DIMMING, mActions.get(R.id.action_screen_dimming));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SHARE, mActions.get(R.id.action_share));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SEEK_INTERVAL, mActions.get(R.id.action_seek_interval));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_ZOOM, mActions.get(R.id.action_video_zoom));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_ROTATE, mActions.get(R.id.action_rotate));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_FLIP, mActions.get(R.id.action_flip));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SOUND_OFF, mActions.get(R.id.action_sound_off));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_AFR, mActions.get(R.id.action_afr));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_INFO, mActions.get(R.id.action_info));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_PLAYBACK_QUEUE, mActions.get(R.id.action_playback_queue));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_CONTENT_BLOCK, mActions.get(R.id.action_content_block));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_STATS, mActions.get(R.id.action_video_stats));
+    }
+
+    private boolean isEnabled(int button) {
+        return mPlayerTweaksData.isPlayerButtonEnabled(button);
+    }
+
+    private void addIfEnabled(ArrayObjectAdapter adapter, int button, Object action) {
+        if (action != null && isEnabled(button)) {
+            adapter.add(action);
         }
     }
 
