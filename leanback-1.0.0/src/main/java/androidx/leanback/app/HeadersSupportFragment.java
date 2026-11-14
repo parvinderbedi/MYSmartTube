@@ -235,6 +235,34 @@ public class HeadersSupportFragment extends BaseRowSupportFragment {
     void setHeadersEnabled(boolean enabled) {
         mHeadersEnabled = enabled;
         updateListViewVisibility();
+        // MOD (MyTube): after the focus fade-out animation, re-highlight the current section in the rail
+        final VerticalGridView listView = getVerticalGridView();
+        if (mRailMode && !enabled && listView != null) {
+            listView.removeCallbacks(mRailHighlightTask);
+            listView.postDelayed(mRailHighlightTask, RAIL_HIGHLIGHT_DELAY_MS);
+        }
+    }
+
+    private static final int RAIL_HIGHLIGHT_DELAY_MS = 400;
+    private final Runnable mRailHighlightTask = this::updateRailHighlight;
+
+    /**
+     * MOD (MyTube): collapsed rail shows the current section icon at full opacity (others stay dimmed).
+     */
+    private void updateRailHighlight() {
+        final VerticalGridView listView = getVerticalGridView();
+        if (!mRailMode || mHeadersEnabled || listView == null) {
+            return;
+        }
+        int selected = getSelectedPosition();
+        for (int i = 0; i < listView.getChildCount(); i++) {
+            View child = listView.getChildAt(i);
+            RecyclerView.ViewHolder holder = listView.getChildViewHolder(child);
+            if (holder instanceof ItemBridgeAdapter.ViewHolder
+                    && holder.getAdapterPosition() == selected) {
+                ((ItemBridgeAdapter.ViewHolder) holder).getViewHolder().view.setAlpha(1f);
+            }
+        }
     }
 
     void setHeadersGone(boolean gone) {
