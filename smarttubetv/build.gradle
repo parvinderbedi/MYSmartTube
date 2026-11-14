@@ -31,7 +31,9 @@ if (keystorePropertiesFile.exists()) {
 }
 
 // The first letter of the flavor name must be in uppercase
-if (new File("${projectDir}/google-services.json").exists() && (getGradle().getStartParameter().getTaskRequests().toString().contains("Stbeta") ||
+// MyTube: Firebase/Crashlytics disabled. google-services.json belongs to the upstream SmartTube Firebase project
+// and has no client for the app.mytube.* package ids. Set enableFirebase=true and supply your own json to re-enable.
+if (project.findProperty("enableFirebase") == "true" && new File("${projectDir}/google-services.json").exists() && (getGradle().getStartParameter().getTaskRequests().toString().contains("Stbeta") ||
         getGradle().getStartParameter().getTaskRequests().toString().contains("Ststable"))) {
     // Google Services Gradle plugin (transforms google-services.json file)
     apply plugin: 'com.google.gms.google-services'
@@ -54,7 +56,7 @@ android {
     
     defaultConfig {
         // values linked with applicationId: searchable.searchSuggestAuthority, searchable.searchSuggestIntentData, VideoContract.CONTENT_AUTHORITY
-        applicationId "app.smarttube"
+        applicationId "app.mytube"
         minSdkVersion project.properties.minSdkVersion
         targetSdkVersion project.properties.targetSdkVersion
         versionCode 2464
@@ -123,7 +125,7 @@ android {
     // https://stackoverflow.com/questions/18332474/how-to-set-versionname-in-apk-filename-using-gradle
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            def project = "SmartTube"
+            def project = "MyTube"
             def flavor = variant.productFlavors[-1].name.substring(2) // remove st prefix
             def buildType = variant.buildType.name.take(1)
             def version = variant.versionName
@@ -160,15 +162,15 @@ android {
     // NOTE: The main goal of prefixing a flavor is to group flavors' folders together
     productFlavors {
         stbeta {
-            applicationId "org.smarttube.beta"
+            applicationId "app.mytube.beta"
             targetSdkVersion project.properties.compileSdkVersion
         }
         ststable {
-            applicationId "org.smarttube.stable"
+            applicationId "app.mytube.stable"
             targetSdkVersion project.properties.compileSdkVersion
         }
         stfdroid {
-            applicationId "app.smarttube.fdroid"
+            applicationId "app.mytube.fdroid"
             minSdkVersion 21
             targetSdkVersion project.properties.compileSdkVersion
 
@@ -238,12 +240,16 @@ dependencies {
 
     // Add the Firebase Crashlytics SDK.
 
-    stbetaImplementation('com.google.firebase:firebase-crashlytics:' + firebaseCrashlyticsVersion) {
-        transitive = true
+    if (project.findProperty("enableFirebase") == "true") {
+        stbetaImplementation('com.google.firebase:firebase-crashlytics:' + firebaseCrashlyticsVersion) {
+            transitive = true
+        }
     }
 
-    ststableImplementation('com.google.firebase:firebase-crashlytics:' + firebaseCrashlyticsVersion) {
-        transitive = true
+    if (project.findProperty("enableFirebase") == "true") {
+        ststableImplementation('com.google.firebase:firebase-crashlytics:' + firebaseCrashlyticsVersion) {
+            transitive = true
+        }
     }
 
     // debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
