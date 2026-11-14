@@ -155,6 +155,7 @@
     <string name="video_zoom_fit_both">Fit either width or height</string>
     <string name="video_zoom_stretch">Stretch</string>
     <string name="color_scheme_mytube">MyTube</string>
+    <string name="header_library">Library</string>
     <string name="color_scheme_teal">Teal</string>
     <string name="color_scheme_teal_oled">Teal (OLED)</string>
     <string name="player_seek_preview_none">Disabled</string>

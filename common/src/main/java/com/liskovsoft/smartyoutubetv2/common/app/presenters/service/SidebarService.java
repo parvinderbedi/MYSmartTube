@@ -250,7 +250,7 @@ public class SidebarService implements ProfileChangeListener {
         mDefaultSections.put(R.string.header_subscriptions, MediaGroup.TYPE_SUBSCRIPTIONS);
         mDefaultSections.put(R.string.header_history, MediaGroup.TYPE_HISTORY);
         mDefaultSections.put(R.string.header_blocked_channels, MediaGroup.TYPE_BLOCKED_CHANNELS);
-        mDefaultSections.put(R.string.header_playlists, MediaGroup.TYPE_USER_PLAYLISTS);
+        mDefaultSections.put(R.string.header_library, MediaGroup.TYPE_USER_PLAYLISTS); // MyTube: "Library"
         mDefaultSections.put(R.string.my_videos, MediaGroup.TYPE_MY_VIDEOS);
         mDefaultSections.put(R.string.playback_queue_category_title, MediaGroup.TYPE_PLAYBACK_QUEUE);
         mDefaultSections.put(R.string.header_settings, MediaGroup.TYPE_SETTINGS);
@@ -259,11 +259,14 @@ public class SidebarService implements ProfileChangeListener {
     private void initPinnedItems() {
         for (int sectionId : mDefaultSections.values()) {
             // Hidden sections
-            enableSection(sectionId, !Helpers.equalsAny(sectionId, new int[] {
-                    MediaGroup.TYPE_NOTIFICATIONS,
-                    MediaGroup.TYPE_PLAYBACK_QUEUE,
-                    MediaGroup.TYPE_TRENDING,
-                    MediaGroup.TYPE_BLOCKED_CHANNELS
+            // MyTube: TV-style sidebar by default (Search is added by the view). Every other section
+            // stays available in Settings > General > sections.
+            enableSection(sectionId, Helpers.equalsAny(sectionId, new int[] {
+                    MediaGroup.TYPE_HOME,
+                    MediaGroup.TYPE_SHORTS,
+                    MediaGroup.TYPE_SUBSCRIPTIONS,
+                    MediaGroup.TYPE_USER_PLAYLISTS,
+                    MediaGroup.TYPE_SETTINGS
             }));
         }
     }

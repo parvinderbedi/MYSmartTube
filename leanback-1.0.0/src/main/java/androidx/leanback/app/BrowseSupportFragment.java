@@ -724,6 +724,12 @@ public class BrowseSupportFragment extends BaseSupportFragment {
     boolean mShowingHeaders = true;
     boolean mCanShowHeaders = true;
     private int mContainerListMarginStart;
+    /**
+     * MOD (MyTube): "rail" mode. When > 0, collapsing the headers shrinks them to an icon rail of this
+     * width instead of sliding them off screen, and the main fragment keeps a fixed start margin equal to
+     * the rail width (expanded headers overlay the content). Avoids relayout of the content on every toggle.
+     */
+    private int mRailWidth;
     private int mContainerListAlignTop;
     private boolean mMainFragmentScaleEnabled = true;
     OnItemViewSelectedListener mExternalOnItemViewSelectedListener;
@@ -1243,6 +1249,7 @@ public class BrowseSupportFragment extends BaseSupportFragment {
 
         if (getChildFragmentManager().findFragmentById(R.id.scale_frame) == null) {
             mHeadersSupportFragment = onCreateHeadersSupportFragment();
+            mHeadersSupportFragment.setRailMode(mRailWidth > 0);
 
             createMainFragment(mAdapter, mSelectedPosition);
             FragmentTransaction ft = getChildFragmentManager().beginTransaction()
@@ -1264,6 +1271,9 @@ public class BrowseSupportFragment extends BaseSupportFragment {
         } else {
             mHeadersSupportFragment = (HeadersSupportFragment) getChildFragmentManager()
                     .findFragmentById(R.id.browse_headers_dock);
+            if (mHeadersSupportFragment != null) {
+                mHeadersSupportFragment.setRailMode(mRailWidth > 0);
+            }
             mMainFragment = getChildFragmentManager().findFragmentById(R.id.scale_frame);
 
             mIsPageRow = savedInstanceState != null
@@ -1451,8 +1461,29 @@ public class BrowseSupportFragment extends BaseSupportFragment {
         View containerList;
         containerList = mHeadersSupportFragment.getView();
         lp = (MarginLayoutParams) containerList.getLayoutParams();
-        lp.setMarginStart(onScreen ? 0 : -mContainerListMarginStart);
+        if (mRailWidth > 0) {
+            // MOD (MyTube): keep an icon rail visible; labels are clipped by the narrow width.
+            lp.setMarginStart(0);
+            lp.width = onScreen ? ViewGroup.LayoutParams.WRAP_CONTENT : mRailWidth;
+        } else {
+            lp.setMarginStart(onScreen ? 0 : -mContainerListMarginStart);
+        }
         containerList.setLayoutParams(lp);
+    }
+
+    /**
+     * MOD (MyTube): enable icon rail mode. Call before the view is created.
+     * @param railWidthPx width of the collapsed sidebar, 0 to disable
+     */
+    public void setRailWidth(int railWidthPx) {
+        mRailWidth = railWidthPx;
+        if (mHeadersSupportFragment != null) {
+            mHeadersSupportFragment.setRailMode(railWidthPx > 0);
+        }
+    }
+
+    public int getRailWidth() {
+        return mRailWidth;
     }
 
     void showHeaders(boolean show) {
@@ -1464,7 +1495,8 @@ public class BrowseSupportFragment extends BaseSupportFragment {
 
     private void expandMainFragment(boolean expand) {
         MarginLayoutParams params = (MarginLayoutParams) mScaleFrameLayout.getLayoutParams();
-        params.setMarginStart(!expand ? mContainerListMarginStart : 0);
+        // MOD (MyTube): in rail mode content never moves, the expanded sidebar overlays it.
+        params.setMarginStart(mRailWidth > 0 ? mRailWidth : (!expand ? mContainerListMarginStart : 0));
         mScaleFrameLayout.setLayoutParams(params);
         mMainFragmentAdapter.setExpand(expand);
 

@@ -186,13 +186,50 @@ public class HeadersSupportFragment extends BaseRowSupportFragment {
         if (listView != null) {
             getView().setVisibility(mHeadersGone ? View.GONE : View.VISIBLE);
             if (!mHeadersGone) {
-                if (mHeadersEnabled) {
+                if (mHeadersEnabled || mRailMode) {
                     listView.setChildrenVisibility(View.VISIBLE);
                 } else {
                     listView.setChildrenVisibility(View.INVISIBLE);
                 }
             }
         }
+    }
+
+    // MOD (MyTube): in rail mode collapsed headers keep their icons visible
+    private boolean mRailMode;
+
+    void setRailMode(boolean railMode) {
+        mRailMode = railMode;
+        updateListViewVisibility();
+    }
+
+    public boolean isRailMode() {
+        return mRailMode;
+    }
+
+    /**
+     * MOD (MyTube): in rail mode the sidebar is a short, static list. Pin it to the top (edge alignment +
+     * top padding) instead of keeping the selected row at a fixed window offset, so icons never jump when the
+     * sidebar collapses/expands. Still scrolls if the list is taller than the screen.
+     */
+    @Override
+    public void setAlignment(int windowAlignOffsetTop) {
+        final VerticalGridView listView = getVerticalGridView();
+        if (mRailMode && listView != null) {
+            listView.setItemAlignmentOffset(0);
+            listView.setItemAlignmentOffsetPercent(VerticalGridView.ITEM_ALIGN_OFFSET_PERCENT_DISABLED);
+            listView.setWindowAlignment(VerticalGridView.WINDOW_ALIGN_BOTH_EDGE);
+            listView.setWindowAlignmentOffset(0);
+            listView.setWindowAlignmentOffsetPercent(50);
+            listView.setPaddingRelative(listView.getPaddingStart(), windowAlignOffsetTop,
+                    listView.getPaddingEnd(), listView.getPaddingBottom());
+            return;
+        }
+        super.setAlignment(windowAlignOffsetTop);
+    }
+
+    public boolean isHeadersEnabled() {
+        return mHeadersEnabled;
     }
 
     void setHeadersEnabled(boolean enabled) {

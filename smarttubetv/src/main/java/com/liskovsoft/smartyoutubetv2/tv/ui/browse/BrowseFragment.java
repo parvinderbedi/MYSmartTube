@@ -56,6 +56,9 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
     private boolean mIsFragmentCreated;
     private boolean mFocusOnContent;
     private CrashRestorer mCrashRestorer;
+    /** MyTube: sidebar "Search" entry. Not a presenter section: always at adapter index 0. */
+    private static final int SEARCH_SECTION_ID = -1_000_001;
+    private BrowseSection mSearchSection;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,9 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         mBrowsePresenter.setView(this);
         mProgressBarManager = new ProgressBarManager();
 
+        // MyTube: collapsed sidebar stays visible as an icon rail (see leanback BrowseSupportFragment MOD)
+        setRailWidth(getResources().getDimensionPixelSize(R.dimen.mytube_rail_width));
+
         setupAdapter();
         setupFragmentFactory();
         setupUi();
@@ -86,7 +92,7 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         super.onSaveInstanceState(outState);
 
         // Called when the activity is paused
-        mCrashRestorer.persistHeaderIndex(outState, getSelectedPosition());
+        mCrashRestorer.persistHeaderIndex(outState, Math.max(0, getSelectedPosition() - getSearchOffset()));
         mCrashRestorer.persistVideo(outState, mBrowsePresenter.getCurrentVideo());
     }
 
@@ -95,6 +101,13 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         View root = super.onCreateView(inflater, container, savedInstanceState);
 
         mProgressBarManager.setRootView((ViewGroup) root);
+
+        // MyTube: title widgets (account, clock, logo) start right of the icon rail
+        View titleView = getTitleView();
+        if (titleView != null) {
+            titleView.setPaddingRelative(getRailWidth() + getResources().getDimensionPixelSize(R.dimen.mytube_content_padding_start),
+                    titleView.getPaddingTop(), titleView.getPaddingEnd(), titleView.getPaddingBottom());
+        }
 
         return root;
     }
@@ -126,6 +139,12 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         getHeadersSupportFragment().setOnHeaderClickedListener(
                 (viewHolder, row) -> {
                     long headerId = row.getHeaderItem().getId();
+
+                    if (headerId == SEARCH_SECTION_ID) {
+                        startSearch();
+                        return;
+                    }
+
                     int newPosition = indexOf(headerId);
 
                     if (getHeadersSupportFragment().getSelectedPosition() != newPosition) {
@@ -143,18 +162,68 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
                 (viewHolder, row) -> {
                     long headerId = row.getHeaderItem().getId();
 
+                    if (headerId == SEARCH_SECTION_ID) {
+                        return;
+                    }
+
                     mBrowsePresenter.onSectionLongPressed((int) headerId);
                 }
         );
 
-        setOnSearchClickedListener(view -> SearchPresenter.instance(getContext()).startSearch(null));
+        // MyTube: Search lives in the sidebar, so the title search orb is not shown.
+    }
+
+    private void startSearch() {
+        SearchPresenter.instance(getContext()).startSearch(null);
+    }
+
+    private BrowseSection getSearchSection() {
+        if (mSearchSection == null) {
+            ErrorFragmentData searchPrompt = new ErrorFragmentData() {
+                @Override
+                public void onAction() {
+                    startSearch();
+                }
+
+                @Override
+                public String getMessage() {
+                    return getString(R.string.mytube_search_hint);
+                }
+
+                @Override
+                public String getActionText() {
+                    return getString(R.string.mytube_header_search);
+                }
+            };
+            mSearchSection = new BrowseSection(SEARCH_SECTION_ID, getString(R.string.mytube_header_search),
+                    BrowseSection.TYPE_ERROR, R.drawable.icon_search, false, searchPrompt);
+        }
+
+        return mSearchSection;
+    }
+
+    /**
+     * Search row occupies adapter index 0, presenter indexes are shifted by this value.
+     */
+    private int getSearchOffset() {
+        return mSectionRowAdapter != null && mSectionRowAdapter.size() > 0
+                && ((PageRow) mSectionRowAdapter.get(0)).getHeaderItem().getId() == SEARCH_SECTION_ID ? 1 : 0;
+    }
+
+    private void ensureSearchHeader() {
+        if (getSearchOffset() == 0) {
+            mSectionRowAdapter.add(0, new PageRow(new SectionHeaderItem(getSearchSection())));
+        }
     }
 
     private void setupFragmentFactory() {
         mSectionFragmentFactory = new BrowseSectionFragmentFactory(
                 (row) -> {
                     focusOnContentIfNeeded();
-                    mBrowsePresenter.onSectionFocused(getSelectedHeaderId());
+                    int headerId = getSelectedHeaderId();
+                    if (headerId != SEARCH_SECTION_ID && headerId != -1) {
+                        mBrowsePresenter.onSectionFocused(headerId);
+                    }
                 }
         );
 
@@ -178,6 +247,7 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         // This Adapter is used to render the MainFragment sidebar labels.
         mSectionRowAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         setAdapter(mSectionRowAdapter);
+        ensureSearchHeader();
     }
 
     private void setupUi() {
@@ -236,7 +306,8 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
     }
 
     private int getSelectedHeaderId() {
-        if (getSelectedPosition() >= mSectionRowAdapter.size()) {
+        // MyTube: position is -1 before the first selection (adapter is never empty now: Search row)
+        if (getSelectedPosition() < 0 || getSelectedPosition() >= mSectionRowAdapter.size()) {
             return -1;
         }
 
@@ -280,6 +351,12 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
             return;
         }
 
+        ensureSearchHeader();
+
+        if (index != -1) {
+            index += getSearchOffset();
+        }
+
         if (mSections.get(section.getId()) != null && (index == -1 || indexOf(section.getId()) == index)) {
             return;
         }
@@ -304,6 +381,7 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
     public void removeAllSections() {
         mSections.clear();
         mSectionRowAdapter.clear();
+        ensureSearchHeader();
     }
 
     @Override
@@ -324,6 +402,10 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
 
     @Override
     public void selectSection(int index, boolean focusOnContent) {
+        if (index >= 0) {
+            index += getSearchOffset(); // presenter index -> adapter index
+        }
+
         if (index >= 0 && mSectionRowAdapter.size() > 0) {
             mFocusOnContent = focusOnContent; // focus after header transition
 
@@ -332,7 +414,9 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
                 // update section manually
                 // headers transition event not fired on the same index
                 focusOnContentIfNeeded();
-                mBrowsePresenter.onSectionFocused(getSelectedHeaderId());
+                if (getSelectedHeaderId() != SEARCH_SECTION_ID) {
+                    mBrowsePresenter.onSectionFocused(getSelectedHeaderId());
+                }
             }
 
             // Need select again if current header is removed previously (can't check for it right now)

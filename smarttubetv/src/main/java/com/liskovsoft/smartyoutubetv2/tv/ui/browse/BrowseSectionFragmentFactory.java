@@ -67,6 +67,9 @@ public class BrowseSectionFragmentFactory extends BrowseSupportFragment.Fragment
             case BrowseSection.TYPE_GRID:
                 fragment = new VideoGridFragment();
                 break;
+            case BrowseSection.TYPE_CHIPS_ROWS:
+                fragment = new com.liskovsoft.smartyoutubetv2.tv.ui.browse.home.HomeRowsFragment();
+                break;
             case BrowseSection.TYPE_SHORTS_GRID:
                 fragment = new ShortsGridFragment();
                 break;

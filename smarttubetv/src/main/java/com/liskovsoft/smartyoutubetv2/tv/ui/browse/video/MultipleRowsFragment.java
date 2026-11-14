@@ -52,13 +52,16 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
     private ShortsCardPresenter mShortsPresenter;
     private int mSelectedRowIndex = -1;
     private ChannelHeaderCallback mChannelHeaderCallback;
+    /** Optional fixed first row (channel search header, MyTube Home chips). Shifts group positions by one. */
+    private Row mTopRow;
+    private RowPresenter mTopRowPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         mMainPresenter = getMainPresenter();
-        mCardPresenter = new VideoCardPresenter();
+        mCardPresenter = createCardPresenter();
         mShortsPresenter = new ShortsCardPresenter();
         mBackgroundManager = ((LeanbackActivity) getActivity()).getBackgroundManager();
 
@@ -69,6 +72,32 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
 
     protected void addHeader(ChannelHeaderCallback callback) {
         mChannelHeaderCallback = callback;
+        mTopRow = callback;
+    }
+
+    /**
+     * MyTube: generic fixed first row. Call before {@code super.onCreate()}.
+     */
+    protected void addTopRow(Row row, RowPresenter presenter) {
+        mTopRow = row;
+        mTopRowPresenter = presenter;
+    }
+
+    protected VideoCardPresenter createCardPresenter() {
+        return new VideoCardPresenter();
+    }
+
+    /** MyTube: called after a new group row is inserted at the given adapter position. */
+    protected void onGroupRowAdded(VideoGroup group, int position) {
+    }
+
+    /** MyTube: called after all group rows were removed. */
+    protected void onRowsCleared() {
+    }
+
+    /** MyTube: adapter position of the row that shows the given group, or -1. */
+    protected int findRowPosition(int groupId) {
+        return findPositionById(groupId);
     }
 
     protected abstract VideoGroupPresenter getMainPresenter();
@@ -96,6 +125,9 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
             ClassPresenterSelector presenterSelector = new ClassPresenterSelector();
             presenterSelector.addClassPresenter(ListRow.class, mRowPresenter);
             presenterSelector.addClassPresenter(ChannelHeaderCallback.class, new ChannelHeaderPresenter());
+            if (mTopRow != null && mTopRowPresenter != null) {
+                presenterSelector.addClassPresenter(mTopRow.getClass(), mTopRowPresenter);
+            }
 
             mRowsAdapter = new ArrayObjectAdapter(presenterSelector);
             setAdapter(mRowsAdapter);
@@ -113,8 +145,8 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
     public void clear() {
         if (mRowsAdapter != null) {
             mRowsAdapter.clear();
-            if (mChannelHeaderCallback != null) {
-                mRowsAdapter.add(mChannelHeaderCallback);
+            if (mTopRow != null) {
+                mRowsAdapter.add(mTopRow);
             }
         }
 
@@ -123,7 +155,9 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
         }
 
         // Reset the position (bug appeared after fragment been reused)
-        setPosition(mChannelHeaderCallback != null ? 1 : 0);
+        setPosition(mTopRow != null ? 1 : 0);
+
+        onRowsCleared();
     }
 
     private void removeByIndex(int idx) {
@@ -215,7 +249,7 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
         }
 
         // Correct position depending on the search bar presence
-        if (group.getPosition() != -1 && mChannelHeaderCallback != null) {
+        if (group.getPosition() != -1 && mTopRow != null) {
             group.setPosition(group.getPosition() + 1);
         }
 
@@ -264,6 +298,8 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
             } else {
                 mRowsAdapter.add(group.getPosition(), row);
             }
+
+            onGroupRowAdded(group, mRowsAdapter.indexOf(row));
         } else {
             Log.d(TAG, "Continue row %s %s", group.getTitle(), System.currentTimeMillis());
 

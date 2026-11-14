@@ -22,6 +22,8 @@
     <!-- Decrease header spacing in BrowseView -->
     <style name="BrowseHeaderStyle" parent="Widget.Leanback.Headers.VerticalGridView">
         <item name="android:verticalSpacing">@dimen/browse_headers_vertical_spacing</item>
+        <!-- MyTube: icons sit inside the 72dp rail -->
+        <item name="android:paddingStart">@dimen/mytube_rail_icon_inset</item>
     </style>
 
     <!-- Color scheme: Teal (Default) -->
@@ -116,6 +118,8 @@
         <item name="android:colorAccent" tools:targetApi="21">@color/mytube_accent</item>
     </style>
     <style name="App.Theme.MyTube.Browse" parent="App.Theme.Leanback.Browse">
+        <!-- Rows/grids start close to the icon rail -->
+        <item name="browsePaddingStart">@dimen/mytube_content_padding_start</item>
         <item name="android:windowBackground">@color/mytube_bg</item>
         <item name="brandColor">@color/mytube_bg</item>
         <item name="brandAccentColor">@color/mytube_accent</item>

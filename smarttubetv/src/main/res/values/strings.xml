@@ -118,4 +118,8 @@
     <string name="text_post_results_title">Posts for %s</string>
     <string name="text_no_results">No results</string>
     <string name="error_message_network_needed">Oops, you need a network connection to do that!</string>
+
+    <string name="mytube_header_search">Search</string>
+    <string name="mytube_search_hint">Search for videos, channels and playlists</string>
+    <string name="mytube_chip_all">All</string>
 </resources>

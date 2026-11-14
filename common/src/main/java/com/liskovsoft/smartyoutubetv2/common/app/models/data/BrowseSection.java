@@ -11,6 +11,8 @@ public class BrowseSection {
     public static final int TYPE_MULTI_GRID = 3;
     public static final int TYPE_ERROR = 4;
     public static final int TYPE_SHORTS_GRID = 5;
+    /** MyTube: Home shelves with a category chips row on top */
+    public static final int TYPE_CHIPS_ROWS = 6;
     private static final int MAX_TITLE_LENGTH_CHARS = 30;
     private final int mId;
     private String mTitle;

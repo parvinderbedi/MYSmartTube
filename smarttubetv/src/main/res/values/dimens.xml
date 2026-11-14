@@ -145,4 +145,22 @@
     <!-- Focus ring around thumbnails -->
     <dimen name="mytube_focus_ring_width">3dp</dimen>
     <dimen name="mytube_corner_radius">8dp</dimen>
+
+    <!-- MyTube icon rail: 20dp inset + 32dp icon + 20dp = 72dp. Labels start at 76dp so they are clipped when collapsed. -->
+    <dimen name="mytube_rail_width">72dp</dimen>
+    <dimen name="mytube_rail_icon_inset">20dp</dimen>
+    <dimen name="mytube_rail_label_gap">24dp</dimen>
+    <dimen name="mytube_content_padding_start">24dp</dimen>
+    <!-- Flat sidebar: no elevation shadow when it overlays content -->
+    <dimen name="lb_browse_headers_z">0dp</dimen>
+
+    <!-- MyTube Home: chips row + 4-column grid -->
+    <dimen name="mytube_content_padding_end">48dp</dimen>
+    <dimen name="mytube_chips_margin_top">88dp</dimen>
+    <dimen name="mytube_chip_text_size">17sp</dimen>
+    <dimen name="mytube_chip_padding_h">18dp</dimen>
+    <dimen name="mytube_chip_padding_v">8dp</dimen>
+    <dimen name="mytube_chip_spacing">12dp</dimen>
+    <dimen name="mytube_chips_height">44dp</dimen>
+    <dimen name="mytube_chips_grid_gap">20dp</dimen>
 </resources>
