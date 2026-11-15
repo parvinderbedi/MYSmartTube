@@ -760,4 +760,14 @@
     <plurals name="seconds">
         <item quantity="other">%s 초</item>
     </plurals>
+    <!-- MyTube -->
+    <string name="header_library">보관함</string>
+    <string name="mytube_header_live">실시간</string>
+    <string name="mytube_up_next">다음 동영상</string>
+    <string name="mytube_add_account">계정 추가</string>
+    <string name="mytube_subscriptions_all">전체</string>
+    <string name="mytube_player_settings">설정</string>
+    <string name="mytube_player_quality">화질</string>
+    <string name="mytube_player_captions">자막</string>
+    <string name="mytube_player_speed">재생 속도</string>
 </resources>

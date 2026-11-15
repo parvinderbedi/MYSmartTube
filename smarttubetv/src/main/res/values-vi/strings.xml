@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">Tìm kiếm</string>
+    <string name="mytube_search_hint">Tìm video, kênh và danh sách phát</string>
+    <string name="mytube_chip_all">Tất cả</string>
+    <string name="mytube_sign_in">Đăng nhập</string>
+    <string name="mytube_switch_account">Chuyển tài khoản</string>
+    <string name="mytube_profile_signed_in">Đã đăng nhập với tên %1$s</string>
+    <string name="mytube_profile_signed_out">Đăng nhập để xem kênh đăng ký, lịch sử và đề xuất</string>
+    <string name="mytube_search_pill">Tìm kiếm</string>
+</resources>

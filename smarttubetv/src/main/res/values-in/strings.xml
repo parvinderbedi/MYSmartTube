@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">Telusuri</string>
+    <string name="mytube_search_hint">Telusuri video, channel, dan playlist</string>
+    <string name="mytube_chip_all">Semua</string>
+    <string name="mytube_sign_in">Login</string>
+    <string name="mytube_switch_account">Ganti akun</string>
+    <string name="mytube_profile_signed_in">Login sebagai %1$s</string>
+    <string name="mytube_profile_signed_out">Login untuk melihat langganan, histori, dan rekomendasi</string>
+    <string name="mytube_search_pill">Telusuri</string>
+</resources>

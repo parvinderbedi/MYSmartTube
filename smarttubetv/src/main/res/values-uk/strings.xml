@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">Пошук</string>
+    <string name="mytube_search_hint">Пошук відео, каналів і плейлистів</string>
+    <string name="mytube_chip_all">Усі</string>
+    <string name="mytube_sign_in">Увійти</string>
+    <string name="mytube_switch_account">Змінити обліковий запис</string>
+    <string name="mytube_profile_signed_in">Ви ввійшли як %1$s</string>
+    <string name="mytube_profile_signed_out">Увійдіть, щоб бачити підписки, історію та рекомендації</string>
+    <string name="mytube_search_pill">Пошук</string>
+</resources>

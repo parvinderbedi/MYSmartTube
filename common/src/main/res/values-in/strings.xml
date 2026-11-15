@@ -760,4 +760,14 @@
     <plurals name="seconds">
         <item quantity="other">%s detik</item>
     </plurals>
+    <!-- MyTube -->
+    <string name="header_library">Koleksi</string>
+    <string name="mytube_header_live">Live</string>
+    <string name="mytube_up_next">Berikutnya</string>
+    <string name="mytube_add_account">Tambahkan akun</string>
+    <string name="mytube_subscriptions_all">Semua</string>
+    <string name="mytube_player_settings">Setelan</string>
+    <string name="mytube_player_quality">Kualitas</string>
+    <string name="mytube_player_captions">Teks</string>
+    <string name="mytube_player_speed">Kecepatan pemutaran</string>
 </resources>

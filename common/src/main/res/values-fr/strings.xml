@@ -762,4 +762,14 @@
         <item quantity="one">%s seconde</item>
         <item quantity="other">%s secondes</item>
     </plurals>
+    <!-- MyTube -->
+    <string name="header_library">Bibliothèque</string>
+    <string name="mytube_header_live">En direct</string>
+    <string name="mytube_up_next">À suivre</string>
+    <string name="mytube_add_account">Ajouter un compte</string>
+    <string name="mytube_subscriptions_all">Tout</string>
+    <string name="mytube_player_settings">Paramètres</string>
+    <string name="mytube_player_quality">Qualité</string>
+    <string name="mytube_player_captions">Sous-titres</string>
+    <string name="mytube_player_speed">Vitesse de lecture</string>
 </resources>

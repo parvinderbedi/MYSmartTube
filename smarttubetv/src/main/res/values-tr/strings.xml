@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">Ara</string>
+    <string name="mytube_search_hint">Video, kanal ve oynatma listesi arayın</string>
+    <string name="mytube_chip_all">Tümü</string>
+    <string name="mytube_sign_in">Oturum aç</string>
+    <string name="mytube_switch_account">Hesap değiştir</string>
+    <string name="mytube_profile_signed_in">%1$s olarak oturum açıldı</string>
+    <string name="mytube_profile_signed_out">Aboneliklerinizi, geçmişinizi ve önerileri görmek için oturum açın</string>
+    <string name="mytube_search_pill">Ara</string>
+</resources>

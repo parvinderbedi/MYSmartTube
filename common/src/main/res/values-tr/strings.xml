@@ -762,4 +762,14 @@
         <item quantity="one">%s saniye</item>
         <item quantity="other">%s saniye</item>
     </plurals>
+    <!-- MyTube -->
+    <string name="header_library">Kitaplık</string>
+    <string name="mytube_header_live">Canlı</string>
+    <string name="mytube_up_next">Sıradaki</string>
+    <string name="mytube_add_account">Hesap ekle</string>
+    <string name="mytube_subscriptions_all">Tümü</string>
+    <string name="mytube_player_settings">Ayarlar</string>
+    <string name="mytube_player_quality">Kalite</string>
+    <string name="mytube_player_captions">Altyazılar</string>
+    <string name="mytube_player_speed">Oynatma hızı</string>
 </resources>

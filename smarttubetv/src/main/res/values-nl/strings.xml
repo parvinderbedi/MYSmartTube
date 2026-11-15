@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">Zoeken</string>
+    <string name="mytube_search_hint">Zoek naar video\'s, kanalen en playlists</string>
+    <string name="mytube_chip_all">Alles</string>
+    <string name="mytube_sign_in">Inloggen</string>
+    <string name="mytube_switch_account">Ander account</string>
+    <string name="mytube_profile_signed_in">Ingelogd als %1$s</string>
+    <string name="mytube_profile_signed_out">Log in om je abonnementen, geschiedenis en aanbevelingen te zien</string>
+    <string name="mytube_search_pill">Zoeken</string>
+</resources>

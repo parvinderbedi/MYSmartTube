@@ -762,4 +762,14 @@
         <item quantity="one">%s सेकंड</item>
         <item quantity="other">%s सेकंड</item>
     </plurals>
+    <!-- MyTube -->
+    <string name="header_library">लाइब्रेरी</string>
+    <string name="mytube_header_live">लाइव</string>
+    <string name="mytube_up_next">आगे चलने वाला</string>
+    <string name="mytube_add_account">खाता जोड़ें</string>
+    <string name="mytube_subscriptions_all">सभी</string>
+    <string name="mytube_player_settings">सेटिंग</string>
+    <string name="mytube_player_quality">क्वालिटी</string>
+    <string name="mytube_player_captions">कैप्शन</string>
+    <string name="mytube_player_speed">वीडियो चलाने की स्पीड</string>
 </resources>

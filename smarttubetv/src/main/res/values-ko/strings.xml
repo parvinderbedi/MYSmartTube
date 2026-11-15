@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">검색</string>
+    <string name="mytube_search_hint">동영상, 채널, 재생목록 검색</string>
+    <string name="mytube_chip_all">전체</string>
+    <string name="mytube_sign_in">로그인</string>
+    <string name="mytube_switch_account">계정 전환</string>
+    <string name="mytube_profile_signed_in">%1$s(으)로 로그인됨</string>
+    <string name="mytube_profile_signed_out">로그인하여 구독, 시청 기록, 추천을 확인하세요</string>
+    <string name="mytube_search_pill">검색</string>
+</resources>

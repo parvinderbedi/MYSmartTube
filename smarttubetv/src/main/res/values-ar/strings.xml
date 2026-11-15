@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">بحث</string>
+    <string name="mytube_search_hint">ابحث عن فيديوهات وقنوات وقوائم تشغيل</string>
+    <string name="mytube_chip_all">الكل</string>
+    <string name="mytube_sign_in">تسجيل الدخول</string>
+    <string name="mytube_switch_account">تبديل الحساب</string>
+    <string name="mytube_profile_signed_in">تم تسجيل الدخول باسم %1$s</string>
+    <string name="mytube_profile_signed_out">سجّل الدخول لمشاهدة اشتراكاتك وسجلّك والاقتراحات</string>
+    <string name="mytube_search_pill">بحث</string>
+</resources>

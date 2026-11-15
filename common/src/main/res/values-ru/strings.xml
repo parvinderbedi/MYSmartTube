@@ -769,4 +769,14 @@
         <item quantity="many">%s секунд</item>
         <item quantity="other">%s секунды</item>
     </plurals>
+    <!-- MyTube -->
+    <string name="header_library">Библиотека</string>
+    <string name="mytube_header_live">Трансляции</string>
+    <string name="mytube_up_next">Далее</string>
+    <string name="mytube_add_account">Добавить аккаунт</string>
+    <string name="mytube_subscriptions_all">Все</string>
+    <string name="mytube_player_settings">Настройки</string>
+    <string name="mytube_player_quality">Качество</string>
+    <string name="mytube_player_captions">Субтитры</string>
+    <string name="mytube_player_speed">Скорость воспроизведения</string>
 </resources>

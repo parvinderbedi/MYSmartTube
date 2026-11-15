@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">Sök</string>
+    <string name="mytube_search_hint">Sök efter videor, kanaler och spellistor</string>
+    <string name="mytube_chip_all">Alla</string>
+    <string name="mytube_sign_in">Logga in</string>
+    <string name="mytube_switch_account">Byt konto</string>
+    <string name="mytube_profile_signed_in">Inloggad som %1$s</string>
+    <string name="mytube_profile_signed_out">Logga in för att se dina prenumerationer, din historik och rekommendationer</string>
+    <string name="mytube_search_pill">Sök</string>
+</resources>

@@ -760,4 +760,14 @@
     <plurals name="seconds">
         <item quantity="other">%s 秒</item>
     </plurals>
+    <!-- MyTube -->
+    <string name="header_library">媒體庫</string>
+    <string name="mytube_header_live">直播</string>
+    <string name="mytube_up_next">接著播放</string>
+    <string name="mytube_add_account">新增帳戶</string>
+    <string name="mytube_subscriptions_all">全部</string>
+    <string name="mytube_player_settings">設定</string>
+    <string name="mytube_player_quality">畫質</string>
+    <string name="mytube_player_captions">字幕</string>
+    <string name="mytube_player_speed">播放速度</string>
 </resources>

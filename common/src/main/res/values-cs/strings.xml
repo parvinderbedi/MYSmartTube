@@ -762,6 +762,16 @@
         <item quantity="one">%s sekunda</item>
         <item quantity="other">%s sekund</item>
     </plurals>
+    <!-- MyTube -->
+    <string name="header_library">Knihovna</string>
+    <string name="mytube_header_live">Živě</string>
+    <string name="mytube_up_next">Další</string>
+    <string name="mytube_add_account">Přidat účet</string>
+    <string name="mytube_subscriptions_all">Vše</string>
+    <string name="mytube_player_settings">Nastavení</string>
+    <string name="mytube_player_quality">Kvalita</string>
+    <string name="mytube_player_captions">Titulky</string>
+    <string name="mytube_player_speed">Rychlost přehrávání</string>
 </resources>
 
 

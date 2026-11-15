@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">Hledat</string>
+    <string name="mytube_search_hint">Hledat videa, kanály a playlisty</string>
+    <string name="mytube_chip_all">Vše</string>
+    <string name="mytube_sign_in">Přihlásit se</string>
+    <string name="mytube_switch_account">Přepnout účet</string>
+    <string name="mytube_profile_signed_in">Přihlášeno jako %1$s</string>
+    <string name="mytube_profile_signed_out">Přihlaste se a uvidíte odběry, historii a doporučení</string>
+    <string name="mytube_search_pill">Hledat</string>
+</resources>

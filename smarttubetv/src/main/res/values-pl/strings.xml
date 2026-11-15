@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">Szukaj</string>
+    <string name="mytube_search_hint">Szukaj filmów, kanałów i playlist</string>
+    <string name="mytube_chip_all">Wszystkie</string>
+    <string name="mytube_sign_in">Zaloguj się</string>
+    <string name="mytube_switch_account">Przełącz konto</string>
+    <string name="mytube_profile_signed_in">Zalogowano jako %1$s</string>
+    <string name="mytube_profile_signed_out">Zaloguj się, aby zobaczyć subskrypcje, historię i rekomendacje</string>
+    <string name="mytube_search_pill">Szukaj</string>
+</resources>

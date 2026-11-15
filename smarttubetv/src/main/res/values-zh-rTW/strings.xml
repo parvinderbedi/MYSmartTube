@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">搜尋</string>
+    <string name="mytube_search_hint">搜尋影片、頻道和播放清單</string>
+    <string name="mytube_chip_all">全部</string>
+    <string name="mytube_sign_in">登入</string>
+    <string name="mytube_switch_account">切換帳戶</string>
+    <string name="mytube_profile_signed_in">已登入為 %1$s</string>
+    <string name="mytube_profile_signed_out">登入即可查看訂閱內容、觀看紀錄和推薦</string>
+    <string name="mytube_search_pill">搜尋</string>
+</resources>

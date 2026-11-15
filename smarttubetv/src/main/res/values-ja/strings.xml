@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mytube_header_search">検索</string>
+    <string name="mytube_search_hint">動画、チャンネル、再生リストを検索</string>
+    <string name="mytube_chip_all">すべて</string>
+    <string name="mytube_sign_in">ログイン</string>
+    <string name="mytube_switch_account">アカウントを切り替える</string>
+    <string name="mytube_profile_signed_in">%1$s としてログイン中</string>
+    <string name="mytube_profile_signed_out">ログインすると、登録チャンネル、履歴、おすすめが表示されます</string>
+    <string name="mytube_search_pill">検索</string>
+</resources>
