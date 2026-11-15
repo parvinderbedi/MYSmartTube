@@ -199,7 +199,7 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
         }
         mSectionsMapping.put(MediaGroup.TYPE_MUSIC, new BrowseSection(MediaGroup.TYPE_MUSIC, getContext().getString(R.string.header_music), BrowseSection.TYPE_ROW, R.drawable.icon_music));
         mSectionsMapping.put(MediaGroup.TYPE_CHANNEL_UPLOADS, new BrowseSection(MediaGroup.TYPE_CHANNEL_UPLOADS, getContext().getString(R.string.header_channels), uploadsType, R.drawable.icon_channels, false));
-        mSectionsMapping.put(MediaGroup.TYPE_SUBSCRIPTIONS, new BrowseSection(MediaGroup.TYPE_SUBSCRIPTIONS, getContext().getString(R.string.header_subscriptions), BrowseSection.TYPE_GRID, R.drawable.icon_subscriptions, false));
+        mSectionsMapping.put(MediaGroup.TYPE_SUBSCRIPTIONS, new BrowseSection(MediaGroup.TYPE_SUBSCRIPTIONS, getContext().getString(R.string.header_subscriptions), BrowseSection.TYPE_MULTI_GRID, R.drawable.icon_subscriptions, false));
         mSectionsMapping.put(MediaGroup.TYPE_HISTORY, new BrowseSection(MediaGroup.TYPE_HISTORY, getContext().getString(R.string.header_history), BrowseSection.TYPE_GRID, R.drawable.icon_history, true));
         mSectionsMapping.put(MediaGroup.TYPE_BLOCKED_CHANNELS,
                 new BrowseSection(MediaGroup.TYPE_BLOCKED_CHANNELS, getContext().getString(R.string.header_blocked_channels), BrowseSection.TYPE_GRID, R.drawable.icon_blocked_channels, false));
@@ -224,7 +224,8 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
         mRowMapping.put(MediaGroup.TYPE_USER_PLAYLISTS, getContentService().getPlaylistRowsObserve());
 
         mGridMapping.put(MediaGroup.TYPE_SHORTS, getContentService().getShortsObserve());
-        mGridMapping.put(MediaGroup.TYPE_SUBSCRIPTIONS, getContentService().getSubscriptionsObserve());
+        // MyTube: TV-app Subscriptions = channel list (left, newest content first) + videos (right)
+        mGridMapping.put(MediaGroup.TYPE_SUBSCRIPTIONS, getContentService().getSubscribedChannelsByNewContentObserve());
         mGridMapping.put(MediaGroup.TYPE_HISTORY, getContentService().getHistoryObserve());
         mGridMapping.put(MediaGroup.TYPE_CHANNEL_UPLOADS, getContentService().getSubscribedChannelsByNewContentObserve());
         mGridMapping.put(MediaGroup.TYPE_NOTIFICATIONS, getNotificationsService().getNotificationItemsObserve());
@@ -412,9 +413,36 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
         saveSelectedItems();
     }
 
+    /** MyTube: marker item for "All" in the Subscriptions channel list */
+    private Video mAllSubscriptionsItem;
+
+    private Video getAllSubscriptionsItem() {
+        if (mAllSubscriptionsItem == null) {
+            mAllSubscriptionsItem = new Video();
+            mAllSubscriptionsItem.title = getContext().getString(R.string.mytube_subscriptions_all);
+        }
+        return mAllSubscriptionsItem;
+    }
+
+    private boolean isAllSubscriptionsItem(Video item) {
+        return item != null && item == mAllSubscriptionsItem;
+    }
+
+    private void updateAllSubscriptions() {
+        if (mCurrentSection != null) {
+            updateVideoGrid(mCurrentSection, getContentService().getSubscriptionsObserve(), 1, false);
+        }
+    }
+
     @Override
     public void onVideoItemSelected(Video item) {
         if (getView() == null) {
+            return;
+        }
+
+        if (isAllSubscriptionsItem(item)) {
+            updateAllSubscriptions();
+            mCurrentVideo = item;
             return;
         }
 
@@ -432,6 +460,11 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
     @Override
     public void onVideoItemClicked(Video item) {
         if (getContext() == null) {
+            return;
+        }
+
+        if (isAllSubscriptionsItem(item)) {
+            updateAllSubscriptions();
             return;
         }
 
@@ -668,6 +701,12 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
             case BrowseSection.TYPE_MULTI_GRID:
                 Observable<MediaGroup> group2 = mGridMapping.get(section.getId());
                 updateVideoGrid(section, group2, 0, section.isAuthOnly());
+                if (section.getId() == MediaGroup.TYPE_SUBSCRIPTIONS && getSignInService().isSigned()) {
+                    // "All" entry on top of the channel list
+                    VideoGroup allGroup = VideoGroup.from(java.util.Collections.singletonList(getAllSubscriptionsItem()), section, 0);
+                    allGroup.setAction(VideoGroup.ACTION_PREPEND);
+                    getView().updateSection(allGroup);
+                }
                 break;
             case BrowseSection.TYPE_ERROR:
                 getView().showProgressBar(false);
@@ -1069,7 +1108,8 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
      * Is Channels new look enabled?
      */
     public boolean isMultiGridChannelUploadsSection() {
-        return mCurrentSection != null && mCurrentSection.getType() == BrowseSection.TYPE_MULTI_GRID && mCurrentSection.getId() == MediaGroup.TYPE_CHANNEL_UPLOADS;
+        return mCurrentSection != null && mCurrentSection.getType() == BrowseSection.TYPE_MULTI_GRID
+                && (mCurrentSection.getId() == MediaGroup.TYPE_CHANNEL_UPLOADS || mCurrentSection.getId() == MediaGroup.TYPE_SUBSCRIPTIONS);
     }
 
     public boolean isSettingsSection() {
