@@ -134,55 +134,68 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
         putAction(new RotateAction(context));
         putAction(new FlipAction(context));
         putAction(new SoundOffAction(context));
+        putAction(new com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.PlayerSettingsAction(context));
     }
 
     /**
-     * MyTube: TV-style main control row. Play/Pause, Next, Captions, Quality, Speed.
-     * Every other control moves to the secondary row (nothing removed, settings toggles still apply).
+     * MyTube: TV-app player layout, three groups on one row under the seek bar:
+     * left (secondary): Channel, Description, Subscribe | center (primary): Previous, Play/Pause, Next |
+     * right (tertiary): Like, Dislike, Comments/Chat, Save, [other enabled buttons], Settings (gear).
+     * Per-button toggles in Settings still apply; Quality/Captions/Speed live in the gear menu.
      */
     @Override
     protected void onCreatePrimaryActions(ArrayObjectAdapter adapter) {
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_PREVIOUS, mSkipPreviousAction);
         // Order matters, super.onCreatePrimaryActions() will create the play / pause action.
         if (isEnabled(PlayerTweaksData.PLAYER_BUTTON_PLAY_PAUSE)) {
             super.onCreatePrimaryActions(adapter);
         }
         addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_NEXT, mSkipNextAction);
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SUBTITLES, mActions.get(R.id.lb_control_closed_captioning));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_HIGH_QUALITY, mActions.get(R.id.lb_control_high_quality));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_SPEED, mActions.get(R.id.action_video_speed));
     }
 
     @Override
     protected void onCreateSecondaryActions(ArrayObjectAdapter adapter) {
-        // Does nothing
         super.onCreateSecondaryActions(adapter);
 
-        // MAX: 7 items. But with custom modification it supports more.
-        // Origin: {@link androidx.leanback.widget.ControlBarPresenter#MAX_CONTROLS}
-        // Custom mod: {@link com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.ControlBarPresenter#MAX_CONTROLS}
-
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_LIKE, mActions.get(R.id.action_thumbs_up));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_DISLIKE, mActions.get(R.id.action_thumbs_down));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SUBSCRIBE, mActions.get(R.id.action_subscribe));
+        // Left group
         addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_OPEN_CHANNEL, mActions.get(R.id.action_channel));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_ADD_TO_PLAYLIST, mActions.get(R.id.action_playlist_add));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_PREVIOUS, mSkipPreviousAction);
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_REPEAT_MODE, mActions.get(R.id.action_repeat));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_CHAT, mActions.get(R.id.action_chat));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SEARCH, mActions.get(R.id.action_search));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_PIP, mActions.get(R.id.action_pip));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SCREEN_DIMMING, mActions.get(R.id.action_screen_dimming));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SHARE, mActions.get(R.id.action_share));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SEEK_INTERVAL, mActions.get(R.id.action_seek_interval));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_ZOOM, mActions.get(R.id.action_video_zoom));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_ROTATE, mActions.get(R.id.action_rotate));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_FLIP, mActions.get(R.id.action_flip));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SOUND_OFF, mActions.get(R.id.action_sound_off));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_AFR, mActions.get(R.id.action_afr));
         addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_INFO, mActions.get(R.id.action_info));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_PLAYBACK_QUEUE, mActions.get(R.id.action_playback_queue));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_CONTENT_BLOCK, mActions.get(R.id.action_content_block));
-        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_VIDEO_STATS, mActions.get(R.id.action_video_stats));
+        addIfEnabled(adapter, PlayerTweaksData.PLAYER_BUTTON_SUBSCRIBE, mActions.get(R.id.action_subscribe));
+
+        // Right group
+        ArrayObjectAdapter right = getTertiaryActionsAdapter();
+        right.clear();
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_LIKE, mActions.get(R.id.action_thumbs_up));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_DISLIKE, mActions.get(R.id.action_thumbs_down));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_CHAT, mActions.get(R.id.action_chat));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_ADD_TO_PLAYLIST, mActions.get(R.id.action_playlist_add));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_SUBTITLES, mActions.get(R.id.lb_control_closed_captioning));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_HIGH_QUALITY, mActions.get(R.id.lb_control_high_quality));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_VIDEO_SPEED, mActions.get(R.id.action_video_speed));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_REPEAT_MODE, mActions.get(R.id.action_repeat));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_SEARCH, mActions.get(R.id.action_search));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_PIP, mActions.get(R.id.action_pip));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_SCREEN_DIMMING, mActions.get(R.id.action_screen_dimming));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_SHARE, mActions.get(R.id.action_share));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_SEEK_INTERVAL, mActions.get(R.id.action_seek_interval));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_VIDEO_ZOOM, mActions.get(R.id.action_video_zoom));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_VIDEO_ROTATE, mActions.get(R.id.action_rotate));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_VIDEO_FLIP, mActions.get(R.id.action_flip));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_SOUND_OFF, mActions.get(R.id.action_sound_off));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_AFR, mActions.get(R.id.action_afr));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_PLAYBACK_QUEUE, mActions.get(R.id.action_playback_queue));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_CONTENT_BLOCK, mActions.get(R.id.action_content_block));
+        addIfEnabled(right, PlayerTweaksData.PLAYER_BUTTON_VIDEO_STATS, mActions.get(R.id.action_video_stats));
+        right.add(mActions.get(R.id.action_player_settings));
+    }
+
+    private ArrayObjectAdapter mTertiaryActionsAdapter;
+
+    private ArrayObjectAdapter getTertiaryActionsAdapter() {
+        if (mTertiaryActionsAdapter == null) {
+            mTertiaryActionsAdapter = new ArrayObjectAdapter(new androidx.leanback.widget.ControlButtonPresenterSelector());
+        }
+        return mTertiaryActionsAdapter;
     }
 
     private boolean isEnabled(int button) {
@@ -200,6 +213,7 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
         PlaybackRowPresenter rowPresenter = super.onCreateRowPresenter();
 
         ((PlaybackTransportRowPresenter) rowPresenter).setOnActionLongClickedListener(this);
+        ((PlaybackTransportRowPresenter) rowPresenter).setTertiaryActionsAdapter(getTertiaryActionsAdapter());
 
         return rowPresenter;
     }
@@ -409,6 +423,9 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
             notifyActionChanged(
                     action,
                     (ArrayObjectAdapter) getControlsRow().getSecondaryActionsAdapter());
+
+            // MyTube: right-hand group
+            notifyActionChanged(action, getTertiaryActionsAdapter());
         }
     }
 

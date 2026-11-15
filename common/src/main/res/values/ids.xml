@@ -24,4 +24,6 @@
     <item name="action_afr" type="id"/>
     <item name="channel_new_content" type="id"/>
     <item name="linkify_click_handler" type="id"/>
+    <!-- MyTube: player gear menu (Quality, Captions, Speed) -->
+    <item name="action_player_settings" type="id"/>
 </resources>

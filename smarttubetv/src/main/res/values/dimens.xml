@@ -189,4 +189,5 @@
     <dimen name="mytube_chips_height">44dp</dimen>
     <dimen name="mytube_chips_grid_gap">20dp</dimen>
     <dimen name="mytube_shelf_title_text_size">17sp</dimen>
+    <dimen name="mytube_player_row_gap">12dp</dimen>
 </resources>

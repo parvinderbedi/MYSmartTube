@@ -186,6 +186,28 @@ public class PlayerUIController extends BasePlayerController {
         }
     }
 
+    /**
+     * MyTube: TV-app style gear menu. Each entry opens the existing dialog for that setting.
+     */
+    private void showPlayerSettingsMenu() {
+        AppDialogPresenter dialog = getAppDialogPresenter();
+
+        dialog.appendSingleButton(UiOptionItem.from(getContext().getString(R.string.mytube_player_quality), option -> {
+            dialog.closeDialog();
+            getMainController().onButtonClicked(R.id.lb_control_high_quality, PlayerUI.BUTTON_OFF);
+        }));
+        dialog.appendSingleButton(UiOptionItem.from(getContext().getString(R.string.mytube_player_captions), option -> {
+            dialog.closeDialog();
+            onSubtitleLongClicked();
+        }));
+        dialog.appendSingleButton(UiOptionItem.from(getContext().getString(R.string.mytube_player_speed), option -> {
+            dialog.closeDialog();
+            getMainController().onButtonClicked(R.id.action_video_speed, getPlayer().getButtonState(R.id.action_video_speed));
+        }));
+
+        dialog.showDialog(getContext().getString(R.string.mytube_player_settings));
+    }
+
     private void onSubtitleLongClicked() {
         if (getPlayer() == null) {
             return;
@@ -578,7 +600,9 @@ public class PlayerUIController extends BasePlayerController {
             return;
         }
 
-        if (buttonId == R.id.action_rotate) {
+        if (buttonId == R.id.action_player_settings) {
+            showPlayerSettingsMenu();
+        } else if (buttonId == R.id.action_rotate) {
             onRotate();
         } else if (buttonId == R.id.action_flip) {
             onFlip();

@@ -88,6 +88,8 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
         final ViewGroup mDescriptionDock;
         final ViewGroup mControlsDock;
         final ViewGroup mSecondaryControlsDock;
+        /** MyTube: right-hand control group (optional dock) */
+        final ViewGroup mTertiaryControlsDock;
         final TextView mTotalTime;
         final TextView mCurrentTime;
         final TextView mEndingTime;
@@ -109,8 +111,10 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
         final StringBuilder mTempBuilder = new StringBuilder();
         ControlBarPresenter.ViewHolder mControlsVh;
         ControlBarPresenter.ViewHolder mSecondaryControlsVh;
+        ControlBarPresenter.ViewHolder mTertiaryControlsVh;
         BoundData mControlsBoundData = new BoundData();
         BoundData mSecondaryBoundData = new BoundData();
+        BoundData mTertiaryBoundData = new BoundData();
         Presenter.ViewHolder mSelectedViewHolder;
         Object mSelectedItem;
         PlaybackControlsRow.PlayPauseAction mPlayPauseAction;
@@ -554,6 +558,8 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
             mControlsDock = (ViewGroup) rootView.findViewById(R.id.controls_dock);
             mSecondaryControlsDock =
                     (ViewGroup) rootView.findViewById(R.id.secondary_controls_dock);
+            mTertiaryControlsDock =
+                    (ViewGroup) rootView.findViewById(com.liskovsoft.smartyoutubetv2.tv.R.id.tertiary_controls_dock);
             mDescriptionViewHolder = descriptionPresenter == null ? null :
                     descriptionPresenter.onCreateViewHolder(mDescriptionDock);
             if (mDescriptionViewHolder != null) {
@@ -629,6 +635,9 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
                 case CONTROLS_MODE_FULL:
                     mControlsVh.view.setVisibility(View.VISIBLE);
                     mSecondaryControlsVh.view.setVisibility(View.VISIBLE);
+                    if (mTertiaryControlsVh != null) {
+                        mTertiaryControlsVh.view.setVisibility(View.VISIBLE);
+                    }
                     mDescriptionViewHolder.view.setVisibility(View.VISIBLE);
                     mAdditionalInfo.setVisibility(View.VISIBLE);
                     //mTimeInfo.setVisibility(View.VISIBLE);
@@ -641,6 +650,9 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
                     mControlsVh.view.setVisibility(View.GONE);
                     // MOD: use GONE to move previews closer to seek bar
                     mSecondaryControlsVh.view.setVisibility(View.GONE);
+                    if (mTertiaryControlsVh != null) {
+                        mTertiaryControlsVh.view.setVisibility(View.GONE);
+                    }
                     mDescriptionViewHolder.view.setVisibility(View.GONE);
                     mAdditionalInfo.setVisibility(View.GONE);
                     //mTimeInfo.setVisibility(View.GONE);
@@ -868,6 +880,14 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
     Presenter mDescriptionPresenter;
     final ControlBarPresenter mPlaybackControlsPresenter;
     final ControlBarPresenter mSecondaryControlsPresenter;
+    /** MyTube: third control bar (right group, TV app player layout) */
+    final ControlBarPresenter mTertiaryControlsPresenter;
+    private ObjectAdapter mTertiaryActionsAdapter;
+
+    /** MyTube: actions shown in the right-hand control group */
+    public void setTertiaryActionsAdapter(ObjectAdapter adapter) {
+        mTertiaryActionsAdapter = adapter;
+    }
     OnActionClickedListener mOnActionClickedListener;
     OnActionLongClickedListener mOnActionLongClickedListener;
 
@@ -931,6 +951,13 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
         mSecondaryControlsPresenter.setOnControlClickedListener(mOnControlClickedListener);
         mPlaybackControlsPresenter.setOnControlLongClickedListener(mOnControlLongClickedListener);
         mSecondaryControlsPresenter.setOnControlLongClickedListener(mOnControlLongClickedListener);
+
+        mTertiaryControlsPresenter = new ControlBarPresenter(com.liskovsoft.smartyoutubetv2.tv.R.layout.lb_control_bar);
+        mTertiaryControlsPresenter.setDefaultFocusToMiddle(false);
+        mTertiaryControlsPresenter.setFocusRecovery(true);
+        mTertiaryControlsPresenter.setOnControlSelectedListener(mOnControlSelectedListener);
+        mTertiaryControlsPresenter.setOnControlClickedListener(mOnControlClickedListener);
+        mTertiaryControlsPresenter.setOnControlLongClickedListener(mOnControlLongClickedListener);
     }
 
     /**
@@ -1057,6 +1084,11 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
         vh.mSecondaryControlsVh = (ControlBarPresenter.ViewHolder) mSecondaryControlsPresenter
                 .onCreateViewHolder(vh.mSecondaryControlsDock);
         vh.mSecondaryControlsDock.addView(vh.mSecondaryControlsVh.view);
+        if (vh.mTertiaryControlsDock != null) {
+            vh.mTertiaryControlsVh = (ControlBarPresenter.ViewHolder) mTertiaryControlsPresenter
+                    .onCreateViewHolder(vh.mTertiaryControlsDock);
+            vh.mTertiaryControlsDock.addView(vh.mTertiaryControlsVh.view);
+        }
         ((PlaybackTransportRowView) vh.view.findViewById(R.id.transport_row))
                 .setOnUnhandledKeyListener(new PlaybackTransportRowView.OnUnhandledKeyListener() {
                 @Override
@@ -1105,6 +1137,13 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
         mSecondaryControlsPresenter.onBindViewHolder(vh.mSecondaryControlsVh,
                 vh.mSecondaryBoundData);
 
+        if (vh.mTertiaryControlsVh != null && mTertiaryActionsAdapter != null) {
+            vh.mTertiaryBoundData.adapter = mTertiaryActionsAdapter;
+            vh.mTertiaryBoundData.presenter = vh.getPresenter(false);
+            vh.mTertiaryBoundData.mRowViewHolder = vh;
+            mTertiaryControlsPresenter.onBindViewHolder(vh.mTertiaryControlsVh, vh.mTertiaryBoundData);
+        }
+
         vh.setTotalTime(row.getDuration());
         vh.setCurrentPosition(row.getCurrentPosition());
         vh.setBufferedPosition(row.getBufferedPosition());
@@ -1121,6 +1160,9 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
         }
         mPlaybackControlsPresenter.onUnbindViewHolder(vh.mControlsVh);
         mSecondaryControlsPresenter.onUnbindViewHolder(vh.mSecondaryControlsVh);
+        if (vh.mTertiaryControlsVh != null) {
+            mTertiaryControlsPresenter.onUnbindViewHolder(vh.mTertiaryControlsVh);
+        }
         if (row != null) {
             row.setOnPlaybackProgressChangedListener(null);
         }

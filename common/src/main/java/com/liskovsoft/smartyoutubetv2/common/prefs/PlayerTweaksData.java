@@ -43,11 +43,11 @@ public class PlayerTweaksData implements ProfileChangeListener {
     public static final int PLAYER_BUTTON_SOUND_OFF = 1 << 25;
     public static final int PLAYER_BUTTON_AFR = 1 << 26;
     public static final int PLAYER_BUTTON_VIDEO_FLIP = 1 << 27;
-    public static final int PLAYER_BUTTON_DEFAULT = PLAYER_BUTTON_SEARCH | PLAYER_BUTTON_PIP | PLAYER_BUTTON_SCREEN_DIMMING | PLAYER_BUTTON_VIDEO_SPEED |
-            PLAYER_BUTTON_VIDEO_STATS | PLAYER_BUTTON_OPEN_CHANNEL | PLAYER_BUTTON_SUBTITLES | PLAYER_BUTTON_SUBSCRIBE |
-            PLAYER_BUTTON_LIKE | PLAYER_BUTTON_DISLIKE | PLAYER_BUTTON_ADD_TO_PLAYLIST | PLAYER_BUTTON_PLAY_PAUSE |
-            PLAYER_BUTTON_REPEAT_MODE | PLAYER_BUTTON_NEXT | PLAYER_BUTTON_PREVIOUS | PLAYER_BUTTON_HIGH_QUALITY |
-            PLAYER_BUTTON_VIDEO_INFO | PLAYER_BUTTON_CHAT;
+    // MyTube: TV-app player layout. Left: Channel, Description, Subscribe | center: Previous, Play, Next |
+    // right: Like, Dislike, Comments/Chat, Save (+ gear, always shown). Other buttons can be enabled in Settings.
+    public static final int PLAYER_BUTTON_DEFAULT = PLAYER_BUTTON_PLAY_PAUSE | PLAYER_BUTTON_PREVIOUS | PLAYER_BUTTON_NEXT |
+            PLAYER_BUTTON_OPEN_CHANNEL | PLAYER_BUTTON_VIDEO_INFO | PLAYER_BUTTON_SUBSCRIBE |
+            PLAYER_BUTTON_LIKE | PLAYER_BUTTON_DISLIKE | PLAYER_BUTTON_CHAT | PLAYER_BUTTON_ADD_TO_PLAYLIST;
     public static final int DNS_TYPE_SYSTEM = GlobalPreferences.DNS_TYPE_SYSTEM;
     public static final int DNS_TYPE_IPV4 = GlobalPreferences.DNS_TYPE_IPV4;
     public static final int DNS_TYPE_GOOGLE = GlobalPreferences.DNS_TYPE_GOOGLE;
@@ -813,6 +813,14 @@ public class PlayerTweaksData implements ProfileChangeListener {
         if (mPlayerButtons >>> 30 == 0b1) { // check leftmost bit (old format)
             int bits = 32 - 24;
             mPlayerButtons = mPlayerButtons << bits >>> bits; // remove auto enabled bits
+        }
+
+        // MyTube: one-time switch of existing installs to the TV-app player button set
+        android.content.SharedPreferences prefs = mPrefs.getContext().getSharedPreferences("mytube_prefs", android.content.Context.MODE_PRIVATE);
+        if (prefs.getInt("player_buttons_layout", 0) < 1) {
+            mPlayerButtons = PLAYER_BUTTON_DEFAULT;
+            prefs.edit().putInt("player_buttons_layout", 1).apply();
+            persistData();
         }
     }
 
