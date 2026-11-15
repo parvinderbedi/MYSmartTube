@@ -568,6 +568,50 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
             mThumbsBar = (ThumbsBar) rootView.findViewById(R.id.thumbs_row);
             mThumbsBarTitle = (TextView) rootView.findViewById(com.liskovsoft.smartyoutubetv2.tv.R.id.thumbs_row_title);
             mThumbsBarWrapper = (ViewGroup) rootView.findViewById(com.liskovsoft.smartyoutubetv2.tv.R.id.thumbs_row_wrapper);
+
+            // MyTube: stretch the row to the height of the list so the title block lands at the
+            // top-left of the screen (the row is bottom-aligned, so the controls don't move).
+            rootView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                private View mParent;
+                private final View.OnLayoutChangeListener mParentLayoutListener =
+                        (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                            if (bottom - top != oldBottom - oldTop) {
+                                applyFullHeight(v);
+                            }
+                        };
+
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                    if (v.getParent() instanceof View) {
+                        mParent = (View) v.getParent();
+                        mParent.addOnLayoutChangeListener(mParentLayoutListener);
+                        applyFullHeight(mParent);
+                    }
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    if (mParent != null) {
+                        mParent.removeOnLayoutChangeListener(mParentLayoutListener);
+                        mParent = null;
+                    }
+                }
+            });
+        }
+
+        /**
+         * MyTube: the list aligns this row's bottom edge to its bottom padding, so a row as tall as
+         * the list minus that padding starts at the top of the screen.
+         */
+        private void applyFullHeight(View parent) {
+            final int height = parent.getHeight() - parent.getPaddingBottom();
+
+            if (height <= 0 || view.getMinimumHeight() == height) {
+                return;
+            }
+
+            // Don't request a layout from inside a layout pass
+            view.post(() -> view.setMinimumHeight(height));
         }
 
         /**

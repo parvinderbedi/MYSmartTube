@@ -13,37 +13,42 @@
     android:clipToPadding="false"
     android:paddingBottom="@dimen/lb_playback_transport_control_row_padding_bottom" >
 
-    <FrameLayout
+    <!-- MyTube: like the TV app, the title and "channel • views • age" sit at the top-left of the
+         screen and the controls at the bottom. The row is stretched to the full height of the
+         list at runtime (PlaybackTransportRowPresenter.ViewHolder#applyFullHeight); the row is
+         bottom-aligned, so the controls stay where they were. -->
+    <LinearLayout
+        android:id="@+id/controls_card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-        <LinearLayout
-            android:id="@+id/controls_card"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingStart="?attr/browsePaddingStart"
+        android:paddingEnd="@dimen/mytube_player_title_margin_end"
+        android:paddingTop="@dimen/mytube_player_title_margin_top"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/lb_playback_transport_image_height"
+            android:layout_gravity="top"
+            android:adjustViewBounds="true"
+            android:layout_marginEnd="@dimen/lb_playback_transport_image_margin_end"
+            android:scaleType="fitStart" />
+
+        <FrameLayout
+            android:id="@+id/description_dock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:clipToPadding="false"
-            android:paddingStart="?attr/browsePaddingStart"
-            android:paddingEnd="?attr/browsePaddingEnd"
-            android:layout_marginBottom="@dimen/lb_playback_transport_control_info_margin_bottom"
-            android:orientation="horizontal" >
+            android:layout_gravity="top"
+            android:clipToPadding="false" />
+    </LinearLayout>
 
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/lb_playback_transport_image_height"
-                android:layout_gravity="top"
-                android:adjustViewBounds="true"
-                android:layout_marginEnd="@dimen/lb_playback_transport_image_margin_end"
-                android:scaleType="fitStart" />
-
-            <FrameLayout
-                android:id="@+id/description_dock"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:clipToPadding="false"
-                android:gravity="bottom" />
-        </LinearLayout>
+    <!-- Takes the free space between the title and the controls; holds the seek preview. -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
         <LinearLayout
             android:id="@+id/thumbs_row_wrapper"
             android:visibility="invisible"
