@@ -197,6 +197,12 @@ public class HeadersSupportFragment extends BaseRowSupportFragment {
 
     // MOD (MyTube): in rail mode collapsed headers keep their icons visible
     private boolean mRailMode;
+    /** MOD (MyTube): top padding of the rail list (-1: use the rows alignment offset) */
+    private int mRailTopPadding = -1;
+
+    public void setRailTopPadding(int px) {
+        mRailTopPadding = px;
+    }
 
     void setRailMode(boolean railMode) {
         mRailMode = railMode;
@@ -221,7 +227,7 @@ public class HeadersSupportFragment extends BaseRowSupportFragment {
             listView.setWindowAlignment(VerticalGridView.WINDOW_ALIGN_BOTH_EDGE);
             listView.setWindowAlignmentOffset(0);
             listView.setWindowAlignmentOffsetPercent(50);
-            listView.setPaddingRelative(listView.getPaddingStart(), windowAlignOffsetTop,
+            listView.setPaddingRelative(listView.getPaddingStart(), mRailTopPadding >= 0 ? mRailTopPadding : windowAlignOffsetTop,
                     listView.getPaddingEnd(), listView.getPaddingBottom());
             return;
         }

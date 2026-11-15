@@ -30,6 +30,10 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.errors.ErrorFragmentData
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.BrowsePresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.SearchPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.SplashPresenter;
+import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.AccountSelectionPresenter;
+import com.liskovsoft.smartyoutubetv2.common.misc.MediaServiceManager;
+import com.liskovsoft.mediaserviceinterfaces.data.MediaGroup;
+import com.liskovsoft.mediaserviceinterfaces.oauth.Account;
 import com.liskovsoft.smartyoutubetv2.common.app.views.BrowseView;
 import com.liskovsoft.smartyoutubetv2.common.misc.CrashRestorer;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
@@ -58,7 +62,11 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
     private CrashRestorer mCrashRestorer;
     /** MyTube: sidebar "Search" entry. Not a presenter section: always at adapter index 0. */
     private static final int SEARCH_SECTION_ID = -1_000_001;
+    /** MyTube: profile entry (avatar + name) pinned above Search, like the TV app */
+    private static final int PROFILE_SECTION_ID = -1_000_002;
     private BrowseSection mSearchSection;
+    private BrowseSection mProfileSection;
+    private String mProfileKey;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +87,7 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
 
         // MyTube: collapsed sidebar stays visible as an icon rail (see leanback BrowseSupportFragment MOD)
         setRailWidth(getResources().getDimensionPixelSize(R.dimen.mytube_rail_width));
+        setRailTopPadding(getResources().getDimensionPixelSize(R.dimen.mytube_rail_top_padding));
 
         setupAdapter();
         setupFragmentFactory();
@@ -145,6 +154,11 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
                         return;
                     }
 
+                    if (headerId == PROFILE_SECTION_ID) {
+                        showAccounts();
+                        return;
+                    }
+
                     int newPosition = indexOf(headerId);
 
                     if (getHeadersSupportFragment().getSelectedPosition() != newPosition) {
@@ -162,7 +176,7 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
                 (viewHolder, row) -> {
                     long headerId = row.getHeaderItem().getId();
 
-                    if (headerId == SEARCH_SECTION_ID) {
+                    if (isPseudoSection(headerId)) {
                         return;
                     }
 
@@ -202,17 +216,84 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         return mSearchSection;
     }
 
+    private void showAccounts() {
+        AccountSelectionPresenter.instance(getContext()).show(true);
+    }
+
+    private static boolean isPseudoSection(long headerId) {
+        return headerId == SEARCH_SECTION_ID || headerId == PROFILE_SECTION_ID;
+    }
+
     /**
-     * Search row occupies adapter index 0, presenter indexes are shifted by this value.
+     * Profile entry: avatar + account name, or a generic icon + "Sign in". Rebuilt when the account changes.
+     */
+    private BrowseSection getProfileSection() {
+        Account account = MediaServiceManager.instance().getSelectedAccount();
+        String name = account != null ? (account.getName() != null ? account.getName() : account.getEmail()) : null;
+        String avatar = account != null ? account.getAvatarImageUrl() : null;
+        String key = name + "|" + avatar;
+
+        if (mProfileSection == null || !key.equals(mProfileKey)) {
+            mProfileKey = key;
+            boolean signedIn = account != null;
+            ErrorFragmentData prompt = new ErrorFragmentData() {
+                @Override
+                public void onAction() {
+                    showAccounts();
+                }
+
+                @Override
+                public String getMessage() {
+                    return signedIn ? getString(R.string.mytube_profile_signed_in, name) : getString(R.string.mytube_profile_signed_out);
+                }
+
+                @Override
+                public String getActionText() {
+                    return getString(signedIn ? R.string.mytube_switch_account : R.string.mytube_sign_in);
+                }
+            };
+            String title = signedIn && name != null ? name : getString(R.string.mytube_sign_in);
+            mProfileSection = avatar != null ?
+                    new BrowseSection(PROFILE_SECTION_ID, title, BrowseSection.TYPE_ERROR, avatar, false, prompt) :
+                    new BrowseSection(PROFILE_SECTION_ID, title, BrowseSection.TYPE_ERROR, R.drawable.browse_title_account, false, prompt);
+        }
+
+        return mProfileSection;
+    }
+
+    /**
+     * Pseudo rows (Profile, Search) occupy the first adapter positions, presenter indexes are shifted by this value.
      */
     private int getSearchOffset() {
-        return mSectionRowAdapter != null && mSectionRowAdapter.size() > 0
-                && ((PageRow) mSectionRowAdapter.get(0)).getHeaderItem().getId() == SEARCH_SECTION_ID ? 1 : 0;
+        int offset = 0;
+        while (mSectionRowAdapter != null && offset < mSectionRowAdapter.size()
+                && isPseudoSection(((PageRow) mSectionRowAdapter.get(offset)).getHeaderItem().getId())) {
+            offset++;
+        }
+        return offset;
     }
 
     private void ensureSearchHeader() {
-        if (getSearchOffset() == 0) {
-            mSectionRowAdapter.add(0, new PageRow(new SectionHeaderItem(getSearchSection())));
+        if (mSectionRowAdapter == null) {
+            return;
+        }
+
+        // Profile at 0 (replace if the account changed)
+        String oldKey = mProfileKey;
+        BrowseSection profile = getProfileSection();
+        boolean hasProfile = mSectionRowAdapter.size() > 0
+                && ((PageRow) mSectionRowAdapter.get(0)).getHeaderItem().getId() == PROFILE_SECTION_ID;
+        if (!hasProfile) {
+            mSectionRowAdapter.add(0, new PageRow(new SectionHeaderItem(profile)));
+        } else if (!mProfileKey.equals(oldKey)) {
+            mSectionRowAdapter.replace(0, new PageRow(new SectionHeaderItem(profile)));
+        }
+
+        // Search at 1
+        boolean hasSearch = mSectionRowAdapter.size() > 1
+                && ((PageRow) mSectionRowAdapter.get(1)).getHeaderItem().getId() == SEARCH_SECTION_ID;
+        if (!hasSearch) {
+            mSectionRowAdapter.add(1, new PageRow(new SectionHeaderItem(getSearchSection())));
         }
     }
 
@@ -221,7 +302,7 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
                 (row) -> {
                     focusOnContentIfNeeded();
                     int headerId = getSelectedHeaderId();
-                    if (headerId != SEARCH_SECTION_ID && headerId != -1) {
+                    if (!isPseudoSection(headerId) && headerId != -1) {
                         mBrowsePresenter.onSectionFocused(headerId);
                     }
                 }
@@ -280,11 +361,24 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
                 Presenter presenter = mPresenterMap.get(o.hashCode());
 
                 if (presenter == null) {
-                    presenter = new IconHeaderItemPresenter(getHeaderResId(o), getIconUrl(o));
+                    presenter = new IconHeaderItemPresenter(getHeaderResId(o), getIconUrl(o), hasDividerAbove(o), isProfile(o));
                     mPresenterMap.put(o.hashCode(), presenter);
                 }
 
                 return presenter;
+            }
+
+            // MyTube: groups like the TV app: [Profile, Search, Home, Shorts] | [Subscriptions, Library] | [Music, Live, ...] | [Settings]
+            private boolean hasDividerAbove(Object o) {
+                if (o instanceof PageRow) {
+                    long id = ((PageRow) o).getHeaderItem().getId();
+                    return id == MediaGroup.TYPE_SUBSCRIPTIONS || id == MediaGroup.TYPE_MUSIC || id == MediaGroup.TYPE_SETTINGS;
+                }
+                return false;
+            }
+
+            private boolean isProfile(Object o) {
+                return o instanceof PageRow && ((PageRow) o).getHeaderItem().getId() == PROFILE_SECTION_ID;
             }
 
             private int getHeaderResId(Object o) {
@@ -414,7 +508,7 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
                 // update section manually
                 // headers transition event not fired on the same index
                 focusOnContentIfNeeded();
-                if (getSelectedHeaderId() != SEARCH_SECTION_ID) {
+                if (!isPseudoSection(getSelectedHeaderId())) {
                     mBrowsePresenter.onSectionFocused(getSelectedHeaderId());
                 }
             }
@@ -554,6 +648,9 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         }
 
         mIsFragmentCreated = false;
+
+        // MyTube: account may have changed (profile entry shows avatar + name)
+        ensureSearchHeader();
     }
 
     /**

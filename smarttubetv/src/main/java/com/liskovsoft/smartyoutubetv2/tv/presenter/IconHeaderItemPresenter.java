@@ -31,9 +31,19 @@ public class IconHeaderItemPresenter extends RowHeaderPresenter {
     private final String mIconUrl;
     private Drawable mDefaultIcon;
 
+    // MyTube: group divider above the item, round avatar (profile entry)
+    private final boolean mDividerAbove;
+    private final boolean mCircleIcon;
+
     public IconHeaderItemPresenter(int resId, String iconUrl) {
+        this(resId, iconUrl, false, false);
+    }
+
+    public IconHeaderItemPresenter(int resId, String iconUrl, boolean dividerAbove, boolean circleIcon) {
         mResId = resId;
         mIconUrl = iconUrl;
+        mDividerAbove = dividerAbove;
+        mCircleIcon = circleIcon;
     }
 
     @Override
@@ -63,12 +73,25 @@ public class IconHeaderItemPresenter extends RowHeaderPresenter {
         View rootView = viewHolder.view;
         rootView.setFocusable(true);
 
+        View divider = rootView.findViewById(R.id.header_divider);
+        if (divider != null) {
+            divider.setVisibility(mDividerAbove ? View.VISIBLE : View.GONE);
+        }
+
         ImageView iconView = rootView.findViewById(R.id.header_icon);
         if (iconView != null) {
             if (mIconUrl != null) {
+                // MyTube: photos (avatars, channel icons) must not get the monochrome tint
+                if (android.os.Build.VERSION.SDK_INT >= 21) {
+                    iconView.setImageTintList(null);
+                }
+                com.bumptech.glide.request.RequestOptions options = ViewUtil.thumbnailOptions().error(mDefaultIcon);
+                if (mCircleIcon) {
+                    options = options.circleCrop();
+                }
                 Glide.with(rootView.getContext())
                         .load(mIconUrl)
-                        .apply(ViewUtil.glideOptions().error(mDefaultIcon))
+                        .apply(options)
                         .listener(mErrorListener)
                         .into(iconView);
 

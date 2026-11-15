@@ -67,6 +67,7 @@ public class NavigateTitleView extends TitleView implements OnDataChange, Accoun
     private int mIconHeight;
     private boolean mIsSearchOrbEnabled;
     private boolean mIsAccountViewEnabled;
+    private View mSearchPill;
     private boolean mIsLanguageViewEnabled;
     private boolean mIsGlobalClockEnabled;
 
@@ -156,6 +157,10 @@ public class NavigateTitleView extends TitleView implements OnDataChange, Accoun
             mAccountView.setVisibility(mSearchVisibility);
         }
 
+        if (mSearchPill != null) {
+            mSearchPill.setVisibility(mSearchVisibility);
+        }
+
         if (mIsLanguageViewEnabled) {
             mLanguageView.setVisibility(mSearchVisibility);
         }
@@ -194,6 +199,11 @@ public class NavigateTitleView extends TitleView implements OnDataChange, Accoun
 
         mSearchOrbView = findViewById(R.id.title_orb);
 
+        mSearchPill = findViewById(R.id.mytube_search_pill);
+        if (mSearchPill != null) {
+            mSearchPill.setOnClickListener(v -> com.liskovsoft.smartyoutubetv2.common.app.presenters.SearchPresenter.instance(getContext()).startSearch(null));
+        }
+
         mAccountView = findViewById(R.id.account_orb);
         mAccountView.setOnOrbClickedListener(v -> AccountSelectionPresenter.instance(getContext()).nextAccountOrDialog());
         mAccountView.setOnOrbLongClickedListener(v -> {
@@ -227,7 +237,9 @@ public class NavigateTitleView extends TitleView implements OnDataChange, Accoun
         MainUIData mainUIData = MainUIData.instance(getContext());
 
         mIsSearchOrbEnabled = !mainUIData.isTopButtonEnabled(MainUIData.TOP_BUTTON_SEARCH);
-        mIsAccountViewEnabled = mainUIData.isTopButtonEnabled(MainUIData.TOP_BUTTON_BROWSE_ACCOUNTS);
+        // MyTube: the account lives at the top of the sidebar (opens a picker); the title orb switched accounts on a
+        // single press, which was easy to trigger by accident.
+        mIsAccountViewEnabled = false;
         mIsLanguageViewEnabled = mainUIData.isTopButtonEnabled(MainUIData.TOP_BUTTON_CHANGE_LANGUAGE);
         mIsGlobalClockEnabled = GeneralData.instance(getContext()).isGlobalClockEnabled();
 

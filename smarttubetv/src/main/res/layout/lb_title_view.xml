@@ -27,6 +27,23 @@
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:layout_gravity="center_vertical|start">
+        <!-- MyTube: TV-style rounded search box -->
+        <TextView
+            android:id="@+id/mytube_search_pill"
+            android:layout_width="@dimen/mytube_search_pill_width"
+            android:layout_height="@dimen/mytube_search_pill_height"
+            android:layout_gravity="center_vertical|start"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:background="@drawable/mytube_search_pill"
+            android:text="@string/mytube_search_pill"
+            android:textColor="@color/mytube_search_pill_text"
+            android:textSize="20sp"
+            android:singleLine="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:visibility="gone" />
         <androidx.leanback.widget.SearchOrbView
             android:id="@+id/title_orb"
             android:layout_height="wrap_content"

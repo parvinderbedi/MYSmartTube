@@ -730,6 +730,7 @@ public class BrowseSupportFragment extends BaseSupportFragment {
      * the rail width (expanded headers overlay the content). Avoids relayout of the content on every toggle.
      */
     private int mRailWidth;
+    private int mRailTopPadding = -1;
     private int mContainerListAlignTop;
     private boolean mMainFragmentScaleEnabled = true;
     OnItemViewSelectedListener mExternalOnItemViewSelectedListener;
@@ -1250,6 +1251,7 @@ public class BrowseSupportFragment extends BaseSupportFragment {
         if (getChildFragmentManager().findFragmentById(R.id.scale_frame) == null) {
             mHeadersSupportFragment = onCreateHeadersSupportFragment();
             mHeadersSupportFragment.setRailMode(mRailWidth > 0);
+            mHeadersSupportFragment.setRailTopPadding(mRailTopPadding);
 
             createMainFragment(mAdapter, mSelectedPosition);
             FragmentTransaction ft = getChildFragmentManager().beginTransaction()
@@ -1273,6 +1275,7 @@ public class BrowseSupportFragment extends BaseSupportFragment {
                     .findFragmentById(R.id.browse_headers_dock);
             if (mHeadersSupportFragment != null) {
                 mHeadersSupportFragment.setRailMode(mRailWidth > 0);
+                mHeadersSupportFragment.setRailTopPadding(mRailTopPadding);
             }
             mMainFragment = getChildFragmentManager().findFragmentById(R.id.scale_frame);
 
@@ -1484,6 +1487,14 @@ public class BrowseSupportFragment extends BaseSupportFragment {
 
     public int getRailWidth() {
         return mRailWidth;
+    }
+
+    /** MOD (MyTube): top padding of the icon rail, so all items fit without scrolling */
+    public void setRailTopPadding(int px) {
+        mRailTopPadding = px;
+        if (mHeadersSupportFragment != null) {
+            mHeadersSupportFragment.setRailTopPadding(px);
+        }
     }
 
     void showHeaders(boolean show) {

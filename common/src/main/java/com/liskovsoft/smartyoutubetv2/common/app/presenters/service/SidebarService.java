@@ -235,23 +235,27 @@ public class SidebarService implements ProfileChangeListener {
         return item.sectionId == -1 ? item.getId() : item.sectionId;
     }
 
+    /**
+     * MyTube: order follows the TV app sidebar: Home, Shorts | Subscriptions, Library, History |
+     * Music, Live, Gaming, News, Sports | others | Settings. (Profile and Search are added by the view.)
+     */
     private void initSections() {
-        mDefaultSections.put(R.string.header_notifications, MediaGroup.TYPE_NOTIFICATIONS);
         mDefaultSections.put(R.string.header_home, MediaGroup.TYPE_HOME);
         mDefaultSections.put(R.string.header_shorts, MediaGroup.TYPE_SHORTS);
-        mDefaultSections.put(R.string.header_trending, MediaGroup.TYPE_TRENDING);
-        mDefaultSections.put(R.string.header_kids_home, MediaGroup.TYPE_KIDS_HOME);
-        mDefaultSections.put(R.string.header_sports, MediaGroup.TYPE_SPORTS);
+        mDefaultSections.put(R.string.header_subscriptions, MediaGroup.TYPE_SUBSCRIPTIONS);
+        mDefaultSections.put(R.string.header_library, MediaGroup.TYPE_USER_PLAYLISTS); // MyTube: "Library"
+        mDefaultSections.put(R.string.header_history, MediaGroup.TYPE_HISTORY);
+        mDefaultSections.put(R.string.header_music, MediaGroup.TYPE_MUSIC);
         mDefaultSections.put(R.string.badge_live, MediaGroup.TYPE_LIVE);
         mDefaultSections.put(R.string.header_gaming, MediaGroup.TYPE_GAMING);
         mDefaultSections.put(R.string.header_news, MediaGroup.TYPE_NEWS);
-        mDefaultSections.put(R.string.header_music, MediaGroup.TYPE_MUSIC);
+        mDefaultSections.put(R.string.header_sports, MediaGroup.TYPE_SPORTS);
+        mDefaultSections.put(R.string.header_kids_home, MediaGroup.TYPE_KIDS_HOME);
+        mDefaultSections.put(R.string.header_trending, MediaGroup.TYPE_TRENDING);
         mDefaultSections.put(R.string.header_channels, MediaGroup.TYPE_CHANNEL_UPLOADS);
-        mDefaultSections.put(R.string.header_subscriptions, MediaGroup.TYPE_SUBSCRIPTIONS);
-        mDefaultSections.put(R.string.header_history, MediaGroup.TYPE_HISTORY);
-        mDefaultSections.put(R.string.header_blocked_channels, MediaGroup.TYPE_BLOCKED_CHANNELS);
-        mDefaultSections.put(R.string.header_library, MediaGroup.TYPE_USER_PLAYLISTS); // MyTube: "Library"
+        mDefaultSections.put(R.string.header_notifications, MediaGroup.TYPE_NOTIFICATIONS);
         mDefaultSections.put(R.string.my_videos, MediaGroup.TYPE_MY_VIDEOS);
+        mDefaultSections.put(R.string.header_blocked_channels, MediaGroup.TYPE_BLOCKED_CHANNELS);
         mDefaultSections.put(R.string.playback_queue_category_title, MediaGroup.TYPE_PLAYBACK_QUEUE);
         mDefaultSections.put(R.string.header_settings, MediaGroup.TYPE_SETTINGS);
     }
@@ -266,6 +270,11 @@ public class SidebarService implements ProfileChangeListener {
                     MediaGroup.TYPE_SHORTS,
                     MediaGroup.TYPE_SUBSCRIPTIONS,
                     MediaGroup.TYPE_USER_PLAYLISTS,
+                    MediaGroup.TYPE_MUSIC,
+                    MediaGroup.TYPE_LIVE,
+                    MediaGroup.TYPE_GAMING,
+                    MediaGroup.TYPE_NEWS,
+                    MediaGroup.TYPE_SPORTS,
                     MediaGroup.TYPE_SETTINGS
             }));
         }
@@ -305,10 +314,30 @@ public class SidebarService implements ProfileChangeListener {
             initPinnedItems();
         }
 
+        applyMyTubeDefaultsOnce();
+
         // Backward compatibility
         enableSection(MediaGroup.TYPE_SETTINGS, true);
 
         cleanupPinnedItems();
+    }
+
+    private static final String MYTUBE_PREFS = "mytube_prefs";
+    private static final String MYTUBE_SIDEBAR_VERSION = "sidebar_layout_version";
+    private static final int MYTUBE_SIDEBAR_LAYOUT = 2;
+
+    /**
+     * MyTube: one-time migration to the TV-style section order/defaults for existing installs.
+     * Only built-in sections are rebuilt; pinned channels/playlists are kept (after the sections).
+     */
+    private void applyMyTubeDefaultsOnce() {
+        android.content.SharedPreferences prefs = mContext.getSharedPreferences(MYTUBE_PREFS, Context.MODE_PRIVATE);
+        if (prefs.getInt(MYTUBE_SIDEBAR_VERSION, 0) >= MYTUBE_SIDEBAR_LAYOUT) {
+            return;
+        }
+        Helpers.removeIf(mPinnedItems, item -> item == null || item.sectionId != -1);
+        initPinnedItems();
+        prefs.edit().putInt(MYTUBE_SIDEBAR_VERSION, MYTUBE_SIDEBAR_LAYOUT).apply();
     }
 
     private void transferOldPinnedItems() {

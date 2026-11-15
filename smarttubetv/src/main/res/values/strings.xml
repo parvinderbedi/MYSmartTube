@@ -122,4 +122,9 @@
     <string name="mytube_header_search">Search</string>
     <string name="mytube_search_hint">Search for videos, channels and playlists</string>
     <string name="mytube_chip_all">All</string>
+    <string name="mytube_sign_in">Sign in</string>
+    <string name="mytube_switch_account">Switch account</string>
+    <string name="mytube_profile_signed_in">Signed in as %1$s</string>
+    <string name="mytube_profile_signed_out">Sign in to see your subscriptions, history and recommendations</string>
+    <string name="mytube_search_pill">Search</string>
 </resources>
