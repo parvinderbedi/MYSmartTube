@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MOD: Focused player button color (default: #66EEEEEE, new: #E8FFFFFF) -->
-    <color name="lb_control_button_color">#86EEEEEE</color>
+    <!-- MyTube: white circle with a dark icon when focused, as on the TV app (was #86EEEEEE) -->
+    <color name="lb_control_button_color">#FFF1F1F1</color>
 
     <!-- Common colors -->
     <color name="default_background_gradient_start">#000000</color>

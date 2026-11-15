@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import androidx.leanback.R;
 import androidx.leanback.widget.Action;
 import androidx.leanback.widget.PlaybackControlsRow;
@@ -83,6 +84,29 @@ public class ControlButtonPresenterSelector extends PresenterSelector {
         }
     }
 
+    /**
+     * MyTube: the focused button is a white circle (see lb_control_button_color), so its icon turns dark.
+     * Called from the button's focus listener (or from {@link TooltipCompatHandler} when tooltips are on).
+     */
+    static void applyFocusTint(View button, boolean hasFocus) {
+        if (button == null || !(button.getParent() instanceof View)) {
+            return;
+        }
+
+        View icon = ((View) button.getParent()).findViewById(R.id.icon);
+
+        if (!(icon instanceof ImageView)) {
+            return;
+        }
+
+        if (hasFocus && Boolean.TRUE.equals(icon.getTag(R.id.icon))) {
+            ((ImageView) icon).setColorFilter(ContextCompat.getColor(icon.getContext(),
+                    com.liskovsoft.smartyoutubetv2.tv.R.color.mytube_text_on_focus));
+        } else {
+            ((ImageView) icon).clearColorFilter();
+        }
+    }
+
     public static class ControlButtonPresenter extends Presenter {
         private int mLayoutResourceId;
         private boolean tooltipsEnabled;
@@ -95,7 +119,12 @@ public class ControlButtonPresenterSelector extends PresenterSelector {
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(mLayoutResourceId, parent, false);
-            return new ActionViewHolder(v);
+            ActionViewHolder vh = new ActionViewHolder(v);
+            if (!tooltipsEnabled) {
+                // With tooltips on, TooltipCompatHandler owns the focus listener and applies the tint
+                vh.mFocusableView.setOnFocusChangeListener(ControlButtonPresenterSelector::applyFocusTint);
+            }
+            return vh;
         }
 
         // Used inside: com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tweaks.ControlBarPresenter.ViewHolder.bindControlToAction()
@@ -106,6 +135,9 @@ public class ControlButtonPresenterSelector extends PresenterSelector {
             ActionViewHolder vh = (ActionViewHolder) viewHolder;
 
             vh.mIcon.setImageDrawable(action.getIcon());
+            // MyTube: don't darken pictures (the channel avatar)
+            vh.mIcon.setTag(R.id.icon, !(action instanceof PaddingAction));
+            applyFocusTint(vh.mFocusableView, vh.mFocusableView.hasFocus());
             if (action instanceof PaddingAction) {
                 int padding = ((PaddingAction) action).getPadding();
                 if (padding > 0) {

@@ -172,6 +172,9 @@ public class TooltipCompatHandler implements View.OnLongClickListener, View.OnHo
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
+        // MyTube: dark icon on the white focused button
+        ControlButtonPresenterSelector.applyFocusTint(v, hasFocus);
+
         if (hasFocus) {
             // Wait till probable animation complete (button is moving)
             setPendingHandler(this);
