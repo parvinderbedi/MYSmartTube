@@ -74,8 +74,11 @@ public class ChannelCardPresenter extends LongClickPresenter {
             ViewUtil.setTextScrollSpeed(textView, getCardTextScrollSpeed(context));
         }
 
+        ImageView iconView = container.findViewById(R.id.channel_image);
+
         container.setOnFocusChangeListener((v, hasFocus) -> {
             textView.setTextColor(hasFocus ? mSelectedTextColor : mDefaultTextColor);
+            tintLocalIcon(iconView, hasFocus);
 
             if (!autoScrollEnabled) {
                 return;
@@ -114,11 +117,16 @@ public class ChannelCardPresenter extends LongClickPresenter {
 
         ImageView imageView = viewHolder.view.findViewById(R.id.channel_image);
         if (video.cardImageUrl == null) {
-            // e.g. the "All" entry: text only
-            imageView.setVisibility(View.GONE);
+            // MyTube: entries without a channel (the "All" entry): list icon, tinted like the text
             Glide.with(context).clear(imageView);
+            imageView.setTag(R.id.channel_new_content, true);
+            imageView.setImageResource(R.drawable.icon_playlist);
+            imageView.setVisibility(View.VISIBLE);
+            tintLocalIcon(imageView, viewHolder.view.hasFocus());
             return;
         }
+        imageView.setTag(R.id.channel_new_content, null);
+        imageView.clearColorFilter();
         imageView.setVisibility(View.VISIBLE);
 
         Glide.with(context)
@@ -127,6 +135,17 @@ public class ChannelCardPresenter extends LongClickPresenter {
                 .listener(mErrorListener)
                 //.error(R.drawable.card_placeholder) // R.color.lb_grey
                 .into(imageView);
+    }
+
+    /**
+     * MyTube: local icons (not avatars) follow the text color, so they stay visible on the white focus pill.
+     */
+    private void tintLocalIcon(ImageView imageView, boolean hasFocus) {
+        if (imageView.getTag(R.id.channel_new_content) == null) {
+            return;
+        }
+
+        imageView.setColorFilter(hasFocus ? mSelectedTextColor : mDefaultTextColor);
     }
 
     @Override

@@ -337,6 +337,11 @@ public class MultiVideoGridFragment extends MultiGridFragment implements VideoSe
             return;
         }
 
+        // MyTube: the TV app's Subscriptions channel list has no filter box ("All" stays on top)
+        if (mMainPresenter instanceof BrowsePresenter && ((BrowsePresenter) mMainPresenter).isSubscriptionsSection()) {
+            return;
+        }
+
         setPosition(1);
 
         mGridAdapter1.setHeader(new SearchFieldCallback() {
