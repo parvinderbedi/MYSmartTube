@@ -413,6 +413,7 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
         saveSelectedItems();
     }
 
+    private Disposable mRightColumnAction;
     /** MyTube: marker item for "All" in the Subscriptions channel list */
     private Video mAllSubscriptionsItem;
 
@@ -805,7 +806,13 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
     }
 
     private void updateVideoGrid(BrowseSection section, Observable<MediaGroup> group, int column) {
-        disposeActions();
+        if (column == 1) {
+            // MyTube: right column of a two-column page: only replace the previous right-column load,
+            // keep the left column (channel list) loading.
+            RxHelper.disposeActions(mRightColumnAction);
+        } else {
+            disposeActions();
+        }
 
         if (getView() == null) {
             Log.e(TAG, "Browse view has been unloaded from the memory. Low RAM?");
@@ -852,6 +859,9 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
                         }, () -> handleLoadError(null));
 
         mActions.add(updateAction);
+        if (column == 1) {
+            mRightColumnAction = updateAction;
+        }
     }
 
     private void continueGroup(VideoGroup group) {

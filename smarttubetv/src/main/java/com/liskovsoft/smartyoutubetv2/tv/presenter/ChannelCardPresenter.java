@@ -33,6 +33,7 @@ public class ChannelCardPresenter extends LongClickPresenter {
     private int mSelectedBackgroundColor;
     private int mNewContentBackgroundColor;
     private int mSelectedTextColor;
+    private int mAccentColor;
     private int mWidth;
     private int mHeight;
 
@@ -55,13 +56,17 @@ public class ChannelCardPresenter extends LongClickPresenter {
 
         @SuppressLint("InflateParams")
         View container = LayoutInflater.from(context).inflate(R.layout.channel_card, null);
-        container.setBackgroundColor(mDefaultBackgroundColor);
+        // MyTube: plain row, white rounded pill when focused (TV app channel list)
+        container.setBackgroundResource(R.drawable.mytube_rail_pill);
+        mDefaultTextColor = ContextCompat.getColor(context, R.color.mytube_text_primary);
+        mSelectedTextColor = ContextCompat.getColor(context, R.color.mytube_text_on_focus);
+        mAccentColor = ContextCompat.getColor(context, R.color.mytube_accent);
         //if (VERSION.SDK_INT >= 23 && MainUIData.instance(context).isUiTweakEnabled(MainUIData.UI_TWEAK_ROUNDED_CORNERS)) {
         //    container.setForeground(ContextCompat.getDrawable(context, R.drawable.lb_card_outline));
         //}
 
         TextView textView = container.findViewById(R.id.channel_title);
-        textView.setBackgroundColor(mDefaultBackgroundColor);
+        textView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         textView.setTextColor(mDefaultTextColor);
 
         boolean autoScrollEnabled = isCardTextAutoScrollEnabled(context);
@@ -70,12 +75,7 @@ public class ChannelCardPresenter extends LongClickPresenter {
         }
 
         container.setOnFocusChangeListener((v, hasFocus) -> {
-            int backgroundColor = hasFocus ? mSelectedBackgroundColor :
-                    textView.getTag(R.id.channel_new_content) != null ? mNewContentBackgroundColor : mDefaultBackgroundColor;
-            int textColor = hasFocus ? mSelectedTextColor : mDefaultTextColor;
-            
-            textView.setBackgroundColor(backgroundColor);
-            textView.setTextColor(textColor);
+            textView.setTextColor(hasFocus ? mSelectedTextColor : mDefaultTextColor);
 
             if (!autoScrollEnabled) {
                 return;
@@ -101,19 +101,29 @@ public class ChannelCardPresenter extends LongClickPresenter {
         ViewUtil.setDimensions(viewHolder.view.findViewById(R.id.channel_card_wrapper), mWidth, -1); // don't do auto height
 
         TextView textView = viewHolder.view.findViewById(R.id.channel_title);
-        textView.setText(video.getTitle());
-
-        // We should setup props each time because object may be reused by the underlying RecyclerView
-        textView.setBackgroundColor(video.hasNewContent ? mNewContentBackgroundColor : mDefaultBackgroundColor);
-        textView.setTag(R.id.channel_new_content, video.hasNewContent ? true : null);
-
+        // MyTube: new videos = small accent dot after the name (instead of a red background)
+        if (video.hasNewContent && video.getTitle() != null) {
+            android.text.SpannableString title = new android.text.SpannableString(video.getTitle() + "  \u25CF");
+            title.setSpan(new android.text.style.ForegroundColorSpan(mAccentColor), title.length() - 1, title.length(),
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textView.setText(title);
+        } else {
+            textView.setText(video.getTitle());
+        }
+        textView.setTextColor(viewHolder.view.hasFocus() ? mSelectedTextColor : mDefaultTextColor);
 
         ImageView imageView = viewHolder.view.findViewById(R.id.channel_image);
+        if (video.cardImageUrl == null) {
+            // e.g. the "All" entry: text only
+            imageView.setVisibility(View.GONE);
+            Glide.with(context).clear(imageView);
+            return;
+        }
         imageView.setVisibility(View.VISIBLE);
 
         Glide.with(context)
                 .load(video.cardImageUrl)
-                .apply(ViewUtil.thumbnailOptions())
+                .apply(ViewUtil.thumbnailOptions().circleCrop())
                 .listener(mErrorListener)
                 //.error(R.drawable.card_placeholder) // R.color.lb_grey
                 .into(imageView);
