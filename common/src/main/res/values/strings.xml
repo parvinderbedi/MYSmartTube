@@ -158,6 +158,7 @@
     <string name="header_library">Library</string>
     <string name="mytube_header_live">Live</string>
     <string name="mytube_up_next">Up next</string>
+    <string name="mytube_add_account">Add account</string>
     <string name="color_scheme_teal">Teal</string>
     <string name="color_scheme_teal_oled">Teal (OLED)</string>
     <string name="player_seek_preview_none">Disabled</string>

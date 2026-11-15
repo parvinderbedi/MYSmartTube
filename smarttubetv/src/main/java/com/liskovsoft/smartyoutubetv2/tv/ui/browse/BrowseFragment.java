@@ -185,6 +185,24 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         );
 
         // MyTube: Search lives in the sidebar, so the title search orb is not shown.
+
+        // MyTube: the expanded sidebar overlays the content; hide the top search box under it
+        setBrowseTransitionListener(new BrowseTransitionListener() {
+            @Override
+            public void onHeadersTransitionStart(boolean withHeaders) {
+                updateSearchPill(withHeaders);
+            }
+        });
+        updateSearchPill(isShowingHeaders());
+    }
+
+    private void updateSearchPill(boolean headersShown) {
+        View titleView = getTitleView();
+        View pill = titleView != null ? titleView.findViewById(R.id.mytube_search_pill) : null;
+        if (pill != null) {
+            pill.setAlpha(headersShown ? 0f : 1f);
+            pill.setFocusable(!headersShown);
+        }
     }
 
     private void startSearch() {

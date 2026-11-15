@@ -75,9 +75,22 @@ public class AccountSelectionPresenter extends BasePresenter<Void> {
             return;
         }
 
+        // MyTube: no accounts yet -> go straight to sign-in instead of a list with only "None"
+        if (accounts.isEmpty() && force) {
+            com.liskovsoft.smartyoutubetv2.common.app.presenters.YTSignInPresenter.instance(getContext()).start();
+            unhold();
+            return;
+        }
+
         AppDialogPresenter dialogPresenter = AppDialogPresenter.instance(getContext());
 
         appendAccountSelection(accounts, icons, dialogPresenter);
+
+        // MyTube: "Add account" like the TV app's profile screen
+        dialogPresenter.appendSingleButton(UiOptionItem.from(getContext().getString(R.string.mytube_add_account), option -> {
+            dialogPresenter.closeDialog();
+            com.liskovsoft.smartyoutubetv2.common.app.presenters.YTSignInPresenter.instance(getContext()).start();
+        }));
 
         dialogPresenter.showDialog(getContext().getString(R.string.settings_accounts), this::unhold);
     }
