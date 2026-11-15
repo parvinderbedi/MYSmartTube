@@ -32,7 +32,8 @@ public class ViewUtil {
     /**
      * Focused card zoom factor
      */
-    public static final int FOCUS_ZOOM_FACTOR = FocusHighlight.ZOOM_FACTOR_SMALL;
+    // MyTube: no zoom on focus (TV home style: white outline only). Also saves a scale animation per key press.
+    public static final int FOCUS_ZOOM_FACTOR = FocusHighlight.ZOOM_FACTOR_NONE;
     //public static final int FOCUS_ZOOM_FACTOR = FocusHighlight.ZOOM_FACTOR_NONE;
     /**
      * Dim focused card?

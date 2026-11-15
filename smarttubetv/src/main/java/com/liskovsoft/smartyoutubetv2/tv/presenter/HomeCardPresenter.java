@@ -13,8 +13,8 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
  * card every frame, which is wasted GPU time on Fire TV).
  */
 public class HomeCardPresenter extends VideoCardPresenter {
-    /** Cards visible per shelf: 4 full + a peek of the 5th */
-    public static final float VISIBLE_CARDS = 4.3f;
+    /** Cards visible per shelf: 3 full + a peek of the 4th (official TV app: ~3.3 on regular shelves) */
+    public static final float VISIBLE_CARDS = 3.3f;
     private Pair<Integer, Integer> mDimens;
 
     @Override
@@ -32,7 +32,7 @@ public class HomeCardPresenter extends VideoCardPresenter {
         int available = screenWidth
                 - res.getDimensionPixelSize(R.dimen.mytube_rail_width)
                 - res.getDimensionPixelSize(R.dimen.mytube_content_padding_start)
-                - res.getDimensionPixelSize(R.dimen.grid_item_horizontal_spacing) * 4;
+                - res.getDimensionPixelSize(R.dimen.grid_item_horizontal_spacing) * 3;
         int width = (int) (available / VISIBLE_CARDS);
         int height = width * 9 / 16;
         return new Pair<>(width, height);

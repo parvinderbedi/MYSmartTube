@@ -80,4 +80,5 @@
     <color name="mytube_focus_ring">#FFFFFF</color>
     <color name="mytube_rail_scrim">#F20F0F0F</color>
     <color name="mytube_chip_current">#C8C8C8</color>
+    <color name="mytube_text_title_idle">#BDBDBD</color>
 </resources>

@@ -40,6 +40,7 @@ public class VideoCardPresenter extends LongClickPresenter {
     private int mSelectedBackgroundColor = -1;
     private int mSelectedTextColor = -1;
     private int mSecondaryTextColor = -1;
+    private int mIdleTitleColor = -1;
     private Drawable mFocusRing;
     private int mCardPreviewType;
     private int mThumbQuality;
@@ -63,6 +64,9 @@ public class VideoCardPresenter extends LongClickPresenter {
         mSecondaryTextColor = isDarkColor(mDefaultBackgroundColor) ?
                 ContextCompat.getColor(context, R.color.mytube_text_secondary) : mDefaultTextColor;
         mFocusRing = ContextCompat.getDrawable(context, R.drawable.mytube_focus_ring);
+        // MyTube: titles of unfocused cards are slightly dimmed, the focused one is bright (TV home style)
+        mIdleTitleColor = isDarkColor(mDefaultBackgroundColor) ?
+                ContextCompat.getColor(context, R.color.mytube_text_title_idle) : mDefaultTextColor;
 
         mCardPreviewType = getCardPreviewType(context);
         mThumbQuality = getThumbQuality(context);
@@ -84,7 +88,8 @@ public class VideoCardPresenter extends LongClickPresenter {
         };
 
         cardView.setTitleLinesNum(isCardMultilineTitleEnabled ? 2 : 1);
-        cardView.setContentLinesNum(isCardMultilineSubtitleEnabled ? 2 : 1);
+        // MyTube: channel on its own line, "views • age" on the next
+        cardView.setContentLinesNum(isSplitMetadataEnabled() || isCardMultilineSubtitleEnabled ? 2 : 1);
         cardView.enableTextAutoScroll(isCardTextAutoScrollEnabled);
         cardView.setTextScrollSpeed(cardTextScrollSpeed);
         cardView.setFocusable(true);
@@ -116,7 +121,7 @@ public class VideoCardPresenter extends LongClickPresenter {
 
         TextView titleText = view.findViewById(R.id.title_text);
         if (titleText != null) {
-            titleText.setTextColor(textColor);
+            titleText.setTextColor(selected ? textColor : mIdleTitleColor);
         }
         TextView contentText = view.findViewById(R.id.content_text);
         if (contentText != null) {
@@ -139,6 +144,27 @@ public class VideoCardPresenter extends LongClickPresenter {
         }
     }
 
+    /**
+     * MyTube: "Channel • 1.2M views • 3 days ago" -> "Channel\n1.2M views • 3 days ago"
+     */
+    private static CharSequence splitChannelLine(CharSequence secondTitle) {
+        if (secondTitle == null) {
+            return null;
+        }
+        String text = secondTitle.toString();
+        java.util.regex.Matcher matcher = SEPARATOR.matcher(text);
+        if (matcher.find() && matcher.start() > 0 && matcher.end() < text.length()) {
+            return text.substring(0, matcher.start()) + "\n" + text.substring(matcher.end());
+        }
+        return secondTitle;
+    }
+
+    private static final java.util.regex.Pattern SEPARATOR = java.util.regex.Pattern.compile("\\s+[\u2022\u00B7]\\s+");
+
+    protected boolean isSplitMetadataEnabled() {
+        return true;
+    }
+
     private static boolean isDarkColor(int color) {
         return androidx.core.graphics.ColorUtils.calculateLuminance(color) < 0.4;
     }
@@ -153,7 +179,7 @@ public class VideoCardPresenter extends LongClickPresenter {
         Context context = cardView.getContext();
 
         cardView.setTitleText(video.getTitle());
-        cardView.setContentText(video.getSecondTitle());
+        cardView.setContentText(isSplitMetadataEnabled() ? splitChannelLine(video.getSecondTitle()) : video.getSecondTitle());
         // Count progress that very close to zero. E.g. when user closed video immediately.
         cardView.setProgress(video.percentWatched > 0 && video.percentWatched < 1 ? 1 : Math.round(video.percentWatched));
         cardView.setBadgeText(
