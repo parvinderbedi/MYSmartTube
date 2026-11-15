@@ -3,8 +3,9 @@
     <!-- Default, same as xhdpi -->
     <!-- 320dpi, Amazon Fire TV Stick -->
 
-    <dimen name="card_width">200dp</dimen>
-    <dimen name="card_height">110dp</dimen>
+    <!-- MyTube: TV-app card size, 27.5% of a 960dp-wide screen (measured on the official app). Grids get 3 columns. -->
+    <dimen name="card_width">264dp</dimen>
+    <dimen name="card_height">148dp</dimen>
     <!-- text_badge_image_view.xml, default: 12sp -->
     <dimen name="card_badge_text_size">14sp</dimen>
 
@@ -135,8 +136,8 @@
     <dimen name="tooltip_y_offset_touch_mod">16dp</dimen>
 
     <!-- MyTube: larger card text, readable from ~3m on a 1080p TV (sp x2 = px at 320dpi) -->
-    <dimen name="lb_basic_card_title_text_size">17sp</dimen>
-    <dimen name="lb_basic_card_content_text_size">14sp</dimen>
+    <dimen name="lb_basic_card_title_text_size">20sp</dimen>
+    <dimen name="lb_basic_card_content_text_size">16sp</dimen>
     <!-- Text aligned with thumbnail edge, like the TV home grid -->
     <dimen name="lb_basic_card_info_padding_horizontal">2dp</dimen>
     <dimen name="lb_basic_card_info_padding_top">10dp</dimen>
@@ -173,7 +174,8 @@
     <dimen name="mytube_rail_label_gap">26dp</dimen>
     <!-- No zoom on the focused sidebar item (pill highlight instead) -->
     <item name="lb_browse_header_select_scale" format="float" type="dimen">1.0</item>
-    <dimen name="mytube_content_padding_start">24dp</dimen>
+    <!-- rail 72dp + 8dp = content at ~8.2% of the width, like the TV app -->
+    <dimen name="mytube_content_padding_start">8dp</dimen>
     <!-- Flat sidebar: no elevation shadow when it overlays content -->
     <dimen name="lb_browse_headers_z">0dp</dimen>
 
@@ -186,4 +188,5 @@
     <dimen name="mytube_chip_spacing">12dp</dimen>
     <dimen name="mytube_chips_height">44dp</dimen>
     <dimen name="mytube_chips_grid_gap">20dp</dimen>
+    <dimen name="mytube_shelf_title_text_size">17sp</dimen>
 </resources>

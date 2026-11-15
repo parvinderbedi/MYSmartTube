@@ -139,8 +139,9 @@ public class ComplexImageCardView extends ImageCardView {
             return;
         }
 
+        // MyTube: up to N lines without reserving empty space (metadata follows the title directly, TV app style)
+        titleView.setMinLines(1);
         titleView.setMaxLines(lines);
-        titleView.setLines(lines);
     }
 
     public void setContentLinesNum(int lines) {

@@ -19,17 +19,23 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.browse.video.VideoRowsFragment;
  */
 public class HomeRowsFragment extends VideoRowsFragment {
     private static final int CHIP_ALL = Integer.MIN_VALUE;
+    /** Official TV app Home has no chips row (search box on top instead). Set true to bring the chips back. */
+    private static final boolean SHOW_CHIPS = false;
     private ChipsRow mChipsRow;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        mChipsRow = new ChipsRow(CHIP_ALL);
-        mChipsRow.setOnChipClickedListener(this::onChipClicked);
-        addTopRow(mChipsRow, new ChipsRowPresenter());
+        if (SHOW_CHIPS) {
+            mChipsRow = new ChipsRow(CHIP_ALL);
+            mChipsRow.setOnChipClickedListener(this::onChipClicked);
+            addTopRow(mChipsRow, new ChipsRowPresenter());
+        }
 
         super.onCreate(savedInstanceState);
 
-        mChipsRow.addChip(CHIP_ALL, getString(R.string.mytube_chip_all));
+        if (mChipsRow != null) {
+            mChipsRow.addChip(CHIP_ALL, getString(R.string.mytube_chip_all));
+        }
     }
 
     @Override
@@ -39,7 +45,9 @@ public class HomeRowsFragment extends VideoRowsFragment {
 
     @Override
     protected void onGroupRowAdded(VideoGroup group, int position) {
-        mChipsRow.addChip(group.getId(), group.getTitle());
+        if (mChipsRow != null) {
+            mChipsRow.addChip(group.getId(), group.getTitle());
+        }
     }
 
     @Override

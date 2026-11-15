@@ -1,7 +1,6 @@
 package com.liskovsoft.smartyoutubetv2.tv.presenter;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 
@@ -13,8 +12,6 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
  * card every frame, which is wasted GPU time on Fire TV).
  */
 public class HomeCardPresenter extends VideoCardPresenter {
-    /** Cards visible per shelf: 3 full + a peek of the 4th (official TV app: ~3.3 on regular shelves) */
-    public static final float VISIBLE_CARDS = 3.3f;
     private Pair<Integer, Integer> mDimens;
 
     @Override
@@ -25,15 +22,13 @@ public class HomeCardPresenter extends VideoCardPresenter {
         return mDimens;
     }
 
+    /** Card width as a fraction of the screen width (official TV app, regular shelves: 27.5%) */
+    public static final float CARD_WIDTH_FRACTION = 0.275f;
+
     public static Pair<Integer, Integer> calculateDimens(Context context) {
-        Resources res = context.getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
         int screenWidth = Math.max(dm.widthPixels, dm.heightPixels);
-        int available = screenWidth
-                - res.getDimensionPixelSize(R.dimen.mytube_rail_width)
-                - res.getDimensionPixelSize(R.dimen.mytube_content_padding_start)
-                - res.getDimensionPixelSize(R.dimen.grid_item_horizontal_spacing) * 3;
-        int width = (int) (available / VISIBLE_CARDS);
+        int width = Math.round(screenWidth * CARD_WIDTH_FRACTION);
         int height = width * 9 / 16;
         return new Pair<>(width, height);
     }

@@ -283,4 +283,9 @@
         <item name="cardSelectedBackground">@color/card_selected_background_white_grey</item>
     </style>
     <!--  End Color scheme: Dark Blue (OLED)  -->
+    <!-- MyTube: shelf titles smaller than sidebar labels, near-white (TV app style) -->
+    <style name="TextAppearance.Leanback.Row.Header" parent="TextAppearance.Leanback.Header">
+        <item name="android:textSize">@dimen/mytube_shelf_title_text_size</item>
+        <item name="android:textColor">@color/mytube_text_primary</item>
+    </style>
 </resources>
