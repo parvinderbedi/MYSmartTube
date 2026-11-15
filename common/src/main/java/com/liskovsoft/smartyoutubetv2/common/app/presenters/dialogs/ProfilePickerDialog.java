@@ -238,7 +238,7 @@ public class ProfilePickerDialog {
     }
 
     private TextView createLetterAvatar(Context context, String name, int color) {
-        String letter = TextUtils.isEmpty(name) ? "?" : name.substring(0, 1).toUpperCase();
+        String letter = TextUtils.isEmpty(name) ? "?" : name.substring(0, 1).toUpperCase(java.util.Locale.getDefault());
         TextView avatar = createText(context, letter, 52, Color.WHITE);
         avatar.setGravity(Gravity.CENTER);
         GradientDrawable circle = new GradientDrawable();

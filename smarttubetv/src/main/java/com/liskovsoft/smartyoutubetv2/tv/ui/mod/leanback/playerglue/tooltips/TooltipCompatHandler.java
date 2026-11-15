@@ -109,7 +109,8 @@ public class TooltipCompatHandler implements View.OnLongClickListener, View.OnHo
         // Invisible controls bar can react on mouse pointer
         //view.setOnHoverListener(null);
 
-        view.setOnFocusChangeListener(null);
+        // MyTube: keep the focused-button icon tint when there's no tooltip
+        view.setOnFocusChangeListener(ControlButtonPresenterSelector::applyFocusTint);
 
         if (!TextUtils.isEmpty(tooltipText)) {
             TooltipCompatHandler handler = new TooltipCompatHandler(view, tooltipText);
