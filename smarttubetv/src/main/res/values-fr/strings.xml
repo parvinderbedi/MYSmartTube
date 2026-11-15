@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">Connecté en tant que %1$s</string>
     <string name="mytube_profile_signed_out">Connectez-vous pour voir vos abonnements, votre historique et vos recommandations</string>
     <string name="mytube_search_pill">Rechercher</string>
+    <string name="mytube_library_watch_later">À regarder plus tard</string>
+    <string name="mytube_library_liked">Vidéos J\'aime</string>
 </resources>

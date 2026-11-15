@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">Ingelogd als %1$s</string>
     <string name="mytube_profile_signed_out">Log in om je abonnementen, geschiedenis en aanbevelingen te zien</string>
     <string name="mytube_search_pill">Zoeken</string>
+    <string name="mytube_library_watch_later">Later bekijken</string>
+    <string name="mytube_library_liked">Video\'s die ik leuk vind</string>
 </resources>

@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">تم تسجيل الدخول باسم %1$s</string>
     <string name="mytube_profile_signed_out">سجّل الدخول لمشاهدة اشتراكاتك وسجلّك والاقتراحات</string>
     <string name="mytube_search_pill">بحث</string>
+    <string name="mytube_library_watch_later">المشاهدة لاحقًا</string>
+    <string name="mytube_library_liked">الفيديوهات التي تم وضع علامة \"إعجاب\" عليها</string>
 </resources>

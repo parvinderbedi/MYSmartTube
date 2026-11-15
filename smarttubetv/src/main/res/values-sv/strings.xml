@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">Inloggad som %1$s</string>
     <string name="mytube_profile_signed_out">Logga in för att se dina prenumerationer, din historik och rekommendationer</string>
     <string name="mytube_search_pill">Sök</string>
+    <string name="mytube_library_watch_later">Titta senare</string>
+    <string name="mytube_library_liked">Gillade videor</string>
 </resources>

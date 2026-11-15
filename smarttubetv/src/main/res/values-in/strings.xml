@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">Login sebagai %1$s</string>
     <string name="mytube_profile_signed_out">Login untuk melihat langganan, histori, dan rekomendasi</string>
     <string name="mytube_search_pill">Telusuri</string>
+    <string name="mytube_library_watch_later">Tonton nanti</string>
+    <string name="mytube_library_liked">Video yang disukai</string>
 </resources>

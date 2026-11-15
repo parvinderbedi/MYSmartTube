@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">Accesso eseguito come %1$s</string>
     <string name="mytube_profile_signed_out">Accedi per vedere iscrizioni, cronologia e consigli</string>
     <string name="mytube_search_pill">Cerca</string>
+    <string name="mytube_library_watch_later">Guarda più tardi</string>
+    <string name="mytube_library_liked">Video piaciuti</string>
 </resources>

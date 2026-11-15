@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">Đã đăng nhập với tên %1$s</string>
     <string name="mytube_profile_signed_out">Đăng nhập để xem kênh đăng ký, lịch sử và đề xuất</string>
     <string name="mytube_search_pill">Tìm kiếm</string>
+    <string name="mytube_library_watch_later">Xem sau</string>
+    <string name="mytube_library_liked">Video đã thích</string>
 </resources>

@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">Вы вошли как %1$s</string>
     <string name="mytube_profile_signed_out">Войдите, чтобы видеть подписки, историю и рекомендации</string>
     <string name="mytube_search_pill">Поиск</string>
+    <string name="mytube_library_watch_later">Смотреть позже</string>
+    <string name="mytube_library_liked">Понравившиеся</string>
 </resources>

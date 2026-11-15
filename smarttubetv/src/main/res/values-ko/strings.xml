@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">%1$s(으)로 로그인됨</string>
     <string name="mytube_profile_signed_out">로그인하여 구독, 시청 기록, 추천을 확인하세요</string>
     <string name="mytube_search_pill">검색</string>
+    <string name="mytube_library_watch_later">나중에 볼 동영상</string>
+    <string name="mytube_library_liked">좋아요 표시한 동영상</string>
 </resources>

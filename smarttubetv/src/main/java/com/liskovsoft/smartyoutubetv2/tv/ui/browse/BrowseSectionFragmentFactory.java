@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment;
 import androidx.leanback.app.BrowseSupportFragment;
 import androidx.leanback.widget.HeaderItem;
 import androidx.leanback.widget.Row;
+import com.liskovsoft.mediaserviceinterfaces.data.MediaGroup;
 import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.BrowseSection;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.SettingsGroup;
@@ -12,6 +13,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.data.VideoGroup;
 import com.liskovsoft.smartyoutubetv2.common.app.models.errors.ErrorFragmentData;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import com.liskovsoft.smartyoutubetv2.tv.ui.browse.dialog.ErrorDialogFragment;
+import com.liskovsoft.smartyoutubetv2.tv.ui.browse.library.LibraryRowsFragment;
 import com.liskovsoft.smartyoutubetv2.tv.ui.browse.interfaces.Section;
 import com.liskovsoft.smartyoutubetv2.tv.ui.browse.interfaces.SettingsSection;
 import com.liskovsoft.smartyoutubetv2.tv.ui.browse.interfaces.VideoSection;
@@ -62,7 +64,13 @@ public class BrowseSectionFragmentFactory extends BrowseSupportFragment.Fragment
 
         switch (mFragmentType) {
             case BrowseSection.TYPE_ROW:
-                fragment = new VideoRowsFragment();
+                // MyTube: Library (playlists as rows) gets the shortcut tiles on top
+                if (header instanceof SectionHeaderItem && ((SectionHeaderItem) header).getSection() != null
+                        && ((SectionHeaderItem) header).getSection().getId() == MediaGroup.TYPE_USER_PLAYLISTS) {
+                    fragment = new LibraryRowsFragment();
+                } else {
+                    fragment = new VideoRowsFragment();
+                }
                 break;
             case BrowseSection.TYPE_GRID:
                 fragment = new VideoGridFragment();

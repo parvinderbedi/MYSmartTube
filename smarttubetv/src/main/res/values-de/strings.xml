@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">Angemeldet als %1$s</string>
     <string name="mytube_profile_signed_out">Melde dich an, um deine Abos, deinen Verlauf und Empfehlungen zu sehen</string>
     <string name="mytube_search_pill">Suche</string>
+    <string name="mytube_library_watch_later">Später ansehen</string>
+    <string name="mytube_library_liked">Videos mit „Mag ich“</string>
 </resources>

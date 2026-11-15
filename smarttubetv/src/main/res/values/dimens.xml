@@ -193,4 +193,14 @@
     <!-- Player title block at the top-left of the screen (TV-app placement) -->
     <dimen name="mytube_player_title_margin_top">36dp</dimen>
     <dimen name="mytube_player_title_margin_end">160dp</dimen>
+    <!-- Library shortcut tiles -->
+    <dimen name="mytube_library_tile_width">200dp</dimen>
+    <dimen name="mytube_library_tile_height">104dp</dimen>
+    <dimen name="mytube_library_tile_spacing">16dp</dimen>
+    <dimen name="mytube_library_tile_padding">14dp</dimen>
+    <dimen name="mytube_library_tile_radius">12dp</dimen>
+    <dimen name="mytube_library_tile_icon_size">28dp</dimen>
+    <dimen name="mytube_library_tile_text_size">18sp</dimen>
+    <dimen name="mytube_library_tile_focus_stroke">3dp</dimen>
+    <dimen name="mytube_library_tiles_bottom_gap">24dp</dimen>
 </resources>

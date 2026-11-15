@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">Sessão iniciada como %1$s</string>
     <string name="mytube_profile_signed_out">Inicie sessão para ver as suas subscrições, histórico e recomendações</string>
     <string name="mytube_search_pill">Pesquisar</string>
+    <string name="mytube_library_watch_later">Ver mais tarde</string>
+    <string name="mytube_library_liked">Vídeos de que gostou</string>
 </resources>

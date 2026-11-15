@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">%1$s olarak oturum açıldı</string>
     <string name="mytube_profile_signed_out">Aboneliklerinizi, geçmişinizi ve önerileri görmek için oturum açın</string>
     <string name="mytube_search_pill">Ara</string>
+    <string name="mytube_library_watch_later">Daha sonra izle</string>
+    <string name="mytube_library_liked">Beğenilen videolar</string>
 </resources>

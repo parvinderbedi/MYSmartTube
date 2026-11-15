@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">Přihlášeno jako %1$s</string>
     <string name="mytube_profile_signed_out">Přihlaste se a uvidíte odběry, historii a doporučení</string>
     <string name="mytube_search_pill">Hledat</string>
+    <string name="mytube_library_watch_later">Přehrát později</string>
+    <string name="mytube_library_liked">Video, která se mi líbí</string>
 </resources>

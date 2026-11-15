@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">Zalogowano jako %1$s</string>
     <string name="mytube_profile_signed_out">Zaloguj się, aby zobaczyć subskrypcje, historię i rekomendacje</string>
     <string name="mytube_search_pill">Szukaj</string>
+    <string name="mytube_library_watch_later">Do obejrzenia</string>
+    <string name="mytube_library_liked">Polubione</string>
 </resources>

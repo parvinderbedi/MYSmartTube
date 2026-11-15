@@ -100,6 +100,37 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
         return findPositionById(groupId);
     }
 
+    /**
+     * MyTube: adapter position of the first row whose first items belong to the given playlist, or -1.
+     */
+    protected int findRowPositionByPlaylistId(String playlistId) {
+        if (mRowsAdapter == null || playlistId == null) {
+            return -1;
+        }
+
+        for (int i = 0; i < mRowsAdapter.size(); i++) {
+            Object row = mRowsAdapter.get(i);
+
+            if (row instanceof ListRow && ((ListRow) row).getAdapter() instanceof VideoGroupObjectAdapter) {
+                VideoGroupObjectAdapter adapter = (VideoGroupObjectAdapter) ((ListRow) row).getAdapter();
+                int count = Math.min(adapter.size(), 3);
+                for (int j = 0; j < count; j++) {
+                    Object item = adapter.get(j);
+                    if (item instanceof Video && playlistId.equals(((Video) item).playlistId)) {
+                        return i;
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    /** MyTube: row selected after the rows are cleared (by default the first row after the top row). */
+    protected int getStartPosition() {
+        return mTopRow != null ? 1 : 0;
+    }
+
     protected abstract VideoGroupPresenter getMainPresenter();
 
     private void applyPendingUpdates() {
@@ -155,7 +186,7 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
         }
 
         // Reset the position (bug appeared after fragment been reused)
-        setPosition(mTopRow != null ? 1 : 0);
+        setPosition(getStartPosition());
 
         onRowsCleared();
     }

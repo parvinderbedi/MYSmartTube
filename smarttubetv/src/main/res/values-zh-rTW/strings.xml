@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">已登入為 %1$s</string>
     <string name="mytube_profile_signed_out">登入即可查看訂閱內容、觀看紀錄和推薦</string>
     <string name="mytube_search_pill">搜尋</string>
+    <string name="mytube_library_watch_later">稍後觀看</string>
+    <string name="mytube_library_liked">喜歡的影片</string>
 </resources>

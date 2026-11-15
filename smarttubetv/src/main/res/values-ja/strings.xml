@@ -8,4 +8,6 @@
     <string name="mytube_profile_signed_in">%1$s としてログイン中</string>
     <string name="mytube_profile_signed_out">ログインすると、登録チャンネル、履歴、おすすめが表示されます</string>
     <string name="mytube_search_pill">検索</string>
+    <string name="mytube_library_watch_later">後で見る</string>
+    <string name="mytube_library_liked">高く評価した動画</string>
 </resources>
