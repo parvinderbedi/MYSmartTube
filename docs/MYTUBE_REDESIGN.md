@@ -5,7 +5,7 @@ YouTube app for TVs, without YouTube's name or logo. Target device: **Fire TV St
 Fire OS 6 / Android 7.1 (API 25), 32-bit ARM, about 1.5–1.8 GB RAM (about 430 MB free in use),
 1080p UI at 320 dpi.
 
-Branch: `mytube-redesign`, built on top of `4e4ef9c6`. Each step is its own commit (see the history).
+Branch: `mytube-redesign`, built on top of `4e4ef9c6`; the overnight batch continues on `claude/project-progress-overnight-4a5jxq`. Each step is its own commit (see the history).
 
 ---
 
@@ -94,26 +94,58 @@ Branch: `mytube-redesign`, built on top of `4e4ef9c6`. Each step is its own comm
 
 ---
 
+### Overnight batch (branch `claude/project-progress-overnight-4a5jxq`): written but NOT yet built or run
+This environment had no Android SDK (dl.google.com is blocked by its network policy), so none of these
+commits were compiled. Java files were only syntax-checked and XML files only parsed. **Build and check
+each one on the emulator first** (list in "Verify first" below).
+
+- `0766157` **Translations:** all MyTube strings in 21 languages (ar, cs, de, es, fr, hi, in, it, ja, ko, nl, pl,
+  pt-rBR, pt-rPT, ru, sv, tr, uk, vi, zh, zh-rTW). `smarttubetv` gets its first `values-xx` folders.
+- `3d80d6f` **Player title at the top-left** (pending item 1): the playback row is stretched to the list height at runtime
+  (`PlaybackTransportRowPresenter.ViewHolder#applyFullHeight`). The list aligns the row's bottom edge, so the controls stay put
+  and the title block (`controls_card`) lands at the top-left. The seek preview fills the space in between.
+  Dimens: `mytube_player_title_margin_top/end`.
+- `c19fd80` + `bb6847f` **Player buttons** (part of item 2): faint circle behind every button when idle; **white circle with a
+  dark icon** when focused (`ControlButtonPresenterSelector.applyFocusTint`; the channel avatar isn't tinted). On API 21+ the
+  buttons use `drawable-v21` ripples, so the app now overrides those (`smarttubetv/res/drawable-v21/lb_control_button_*.xml`),
+  and `lb_control_button_color` is `#FFF1F1F1`. The primary circle now fits the 64 dp button height (it was clipped).
+- `5b3d55e` **Subscriptions** (part of item 7): "All" shows a list icon (tinted like the text); no "Filter channels" box on
+  Subscriptions (Channels keeps it).
+- `734704b` **Library tiles** (item 5): `LibraryRowsFragment` (used for Library when it shows rows) adds a row of gradient tiles:
+  History and Music open those sections (`BrowsePresenter.selectSection`; History is enabled until restart if hidden);
+  Watch later / Liked videos jump to the shelf whose first items have playlist id `WL` / `LL` (first shelf if not found);
+  Playlists jumps to the first shelf. The page starts on the tiles. `LibraryTilesRowPresenter` follows `ChipsRowPresenter`.
+- `c36bb1e` **"Who's watching?"** (item 4): `ProfilePickerDialog` (common, views built in code) replaces the account dialog:
+  round avatars (letter avatar if none), current profile ringed in teal with its e-mail, "Add account", "Watch as guest"
+  (no account) and "Manage accounts" pills. Falls back to the old dialog when there is no Activity. No "Add a kid account".
+
+#### Verify first (emulator)
+1. Build: `./gradlew :smarttubetv:assembleStstableDebug`.
+2. Player: title/channel line at the top-left, controls unchanged at the bottom; seek preview still shows while seeking;
+   scrolling down into related rows and back; PiP; idle/focused button circles; icon turns dark on focus; Like highlight
+   still visible when not focused; tooltips on and off (Settings > Player).
+3. Library: tiles row on top, focus starts there, Down goes to the shelves, every tile works; check that Watch later /
+   Liked find their shelf (if not, the playlist-id lookup in `MultipleRowsFragment.findRowPositionByPlaylistId` needs another key).
+4. Profile entry in the sidebar: the full-screen picker, D-pad between avatars and pills, Back closes it, switching accounts.
+5. Subscriptions: "All" icon visible on and off focus; no filter box.
+6. A non-English locale (e.g. German) for the new strings.
+
 ## 3. Pending
 
 ### Matching the official app (priority order)
-1. **Player title placement:** official has the title and "channel • views • age" at the **top-left of the screen**,
-   with the controls at the bottom. MyTube still draws the title just above the time line (`controls_card` / description dock
-   in `lb_playback_transport_controls_row.xml`).
-2. **Player button styling:** official uses text pills for "Description" and "Subscribe" next to the channel avatar,
-   round buttons with a subtle background, and a big white round Play/Pause. MyTube uses icons.
+1. ~~**Player title placement**~~: done in `3d80d6f` (verify on device).
+2. **Player button styling:** round buttons with a subtle background and white-on-focus are done (`c19fd80`, `bb6847f`).
+   Still open: text pills for "Description" and "Subscribe" next to the channel avatar, and a bigger Play/Pause.
 3. **Search screen:** official has a wide search bar at the top; the **left** column holds suggestions (white pill on focus);
    the **right** has an on-screen keyboard (A–Z in a 7-column grid, backspace, "&123", language key, SPACE / CLEAR / SEARCH buttons);
    below it is a "From recommended searches" shelf. MyTube still uses the SmartTube search UI.
-4. **"Who's watching?" profile screen:** full-screen, with large round avatars and names, the current one ringed
-   with its handle and a gear underneath, "Add account" and "Add a kid account", and a "Watch as guest" pill.
-   MyTube currently shows the account picker dialog.
-5. **Library:** a top row of colored gradient tiles (History, Watch later, Playlists, Music, Movies & TV, Podcasts),
-   then shelves (History; Watch later "Videos you've added"; ...). MyTube's Library = Playlists rows.
+4. ~~**"Who's watching?" profile screen**~~: done in `c36bb1e` (verify on device). No "Add a kid account" (no kids sign-in flow here).
+5. **Library:** gradient tiles done in `734704b` (History, Watch later, Liked videos, Playlists, Music; no Movies & TV or
+   Podcasts, as there is no data source). Still open: a History shelf at the top of the shelves.
 6. **Home, focused shelf grows:** official focused shelf cards are 37.4% of the screen width, other shelves 27.5%.
    This needs per-row sizing on focus; measure jank on the Fire TV before shipping.
-7. **Subscriptions polish:** a large "Subscriptions" page title, an "A–Z" header before the alphabetical list,
-   and "All" with a list icon in a pill. Consider hiding the "Filter channels" box.
+7. **Subscriptions polish:** "All" icon and no filter box are done (`5b3d55e`). Still open: a large "Subscriptions" page title.
+   An "A–Z" header doesn't apply while the list is sorted by newest content.
 8. **Settings:** official uses two panes (a list with section headers on the left, detail on the right). MyTube uses an icon grid.
 9. **Sidebar:** official expanding pushes the content right (MyTube overlays it, which is cheaper; keep unless asked).
    Official also has Movies & TV and Podcasts entries (no data source in this app).
@@ -133,7 +165,7 @@ Next ideas: overdraw check (`debug.hwui.overdraw`), cheaper card text (no marque
 dropped frames during playback, and memory under long sessions.
 
 ### Other
-- New strings are English-only: Library, Up next, Search, All, Settings, Quality, Captions, Playback speed, Add account, Live.
+- ~~New strings are English-only~~: translated into 21 languages in `0766157` (machine-quality; a native speaker should review).
 - Translations that mention "YouTube" in instructions (linking a phone, cast list) were kept on purpose (they describe interop).
 - `HomeChipsGridFragment` was removed; `ChipsRowPresenter` is kept for the optional chips row.
 
@@ -147,6 +179,8 @@ dropped frames during playback, and memory under long sessions.
 | Sections and defaults | `common/.../presenters/BrowsePresenter.java`, `presenters/service/SidebarService.java`, `models/data/BrowseSection.java` |
 | Home | `ui/browse/home/HomeRowsFragment.java`, `presenter/HomeCardPresenter.java`, `ui/browse/video/MultipleRowsFragment.java` |
 | Cards | `presenter/VideoCardPresenter.java`, `presenter/ChannelCardPresenter.java`, `ui/widgets/complexcardview/ComplexImageCardView.java` |
-| Player | `ui/playback/other/VideoPlayerGlue.java`, `ui/mod/leanback/playerglue/tweaks/PlaybackTransportRowPresenter.java`, `res/layout/lb_playback_transport_controls_row.xml`, `common/.../controllers/PlayerUIController.java`, `common/.../prefs/PlayerTweaksData.java` |
+| Library | `ui/browse/library/LibraryRowsFragment.java`, `presenter/LibraryTilesRowPresenter.java`, `ui/browse/BrowseSectionFragmentFactory.java` |
+| Profile picker | `common/.../presenters/dialogs/ProfilePickerDialog.java`, `AccountSelectionPresenter.java` |
+| Player | `ui/mod/leanback/playerglue/tooltips/ControlButtonPresenterSelector.java`, `res/drawable-v21/lb_control_button_*.xml`, `ui/playback/other/VideoPlayerGlue.java`, `ui/mod/leanback/playerglue/tweaks/PlaybackTransportRowPresenter.java`, `res/layout/lb_playback_transport_controls_row.xml`, `common/.../controllers/PlayerUIController.java`, `common/.../prefs/PlayerTweaksData.java` |
 | Theme / sizes | `smarttubetv/src/main/res/values/{styles,colors,dimens}.xml`, `common/.../prefs/MainUIData.java` |
 | Perf | `tv/util/ViewUtil.java`, `tv/util/GlideCachingModule.java`, `common/.../exoplayer/other/ExoPlayerInitializer.java` |
