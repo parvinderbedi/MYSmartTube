@@ -10,6 +10,7 @@
     <color name="lb_browse_header_description_color">#AAFFFFFF</color>
     <color name="lb_browse_title_color">#EEEEEE</color>
     <color name="lb_control_button_color">#66EEEEEE</color>
+    <color name="mytube_control_button_idle">#1FFFFFFF</color>
     <color name="lb_control_button_text">#EEEEEE</color>
     <color name="lb_default_brand_color">#FF1B1C1E</color>
     <color name="lb_default_brand_color_dark">#FF263238</color>

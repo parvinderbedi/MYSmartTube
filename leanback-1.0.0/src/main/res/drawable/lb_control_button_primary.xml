@@ -15,13 +15,23 @@
      limitations under the License.
 -->
 
+<!-- MyTube: round buttons with a subtle background (TV app), brighter when focused.
+     The circle fits the button height so it is never clipped. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android" android:constantSize="true" >
     <item android:state_focused="true">
         <shape android:shape="oval">
             <solid android:color="@color/lb_control_button_color" />
             <size
-                android:height="@dimen/lb_control_button_diameter"
-                android:width="@dimen/lb_control_button_diameter" />
+                android:height="@dimen/lb_control_button_height"
+                android:width="@dimen/lb_control_button_height" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/mytube_control_button_idle" />
+            <size
+                android:height="@dimen/lb_control_button_height"
+                android:width="@dimen/lb_control_button_height" />
         </shape>
     </item>
 </selector>
