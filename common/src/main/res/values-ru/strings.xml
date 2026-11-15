@@ -779,4 +779,7 @@
     <string name="mytube_player_quality">Качество</string>
     <string name="mytube_player_captions">Субтитры</string>
     <string name="mytube_player_speed">Скорость воспроизведения</string>
+    <string name="mytube_whos_watching">Кто смотрит?</string>
+    <string name="mytube_watch_as_guest">Смотреть как гость</string>
+    <string name="mytube_manage_accounts">Управление аккаунтами</string>
 </resources>

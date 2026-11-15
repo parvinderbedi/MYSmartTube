@@ -771,4 +771,7 @@
     <string name="mytube_player_quality">画质</string>
     <string name="mytube_player_captions">字幕</string>
     <string name="mytube_player_speed">播放速度</string>
+    <string name="mytube_whos_watching">谁在观看？</string>
+    <string name="mytube_watch_as_guest">以访客身份观看</string>
+    <string name="mytube_manage_accounts">管理账号</string>
 </resources>

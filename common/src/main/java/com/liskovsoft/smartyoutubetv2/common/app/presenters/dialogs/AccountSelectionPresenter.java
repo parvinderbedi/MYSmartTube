@@ -1,6 +1,7 @@
 package com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -82,6 +83,12 @@ public class AccountSelectionPresenter extends BasePresenter<Void> {
             return;
         }
 
+        // MyTube: full-screen "Who's watching?" screen, as on the TV app
+        if (getContext() instanceof Activity && Utils.checkActivity((Activity) getContext())) {
+            showProfilePicker((Activity) getContext(), accounts, icons);
+            return;
+        }
+
         AppDialogPresenter dialogPresenter = AppDialogPresenter.instance(getContext());
 
         appendAccountSelection(accounts, icons, dialogPresenter);
@@ -93,6 +100,32 @@ public class AccountSelectionPresenter extends BasePresenter<Void> {
         }));
 
         dialogPresenter.showDialog(getContext().getString(R.string.settings_accounts), this::unhold);
+    }
+
+    private void showProfilePicker(Activity activity, List<Account> accounts, List<Drawable> icons) {
+        new ProfilePickerDialog(activity, new ProfilePickerDialog.Callback() {
+            @Override
+            public void onAccountSelected(Account account) {
+                if (account == null || !account.isSelected()) {
+                    selectAccount(account);
+                }
+            }
+
+            @Override
+            public void onAddAccount() {
+                com.liskovsoft.smartyoutubetv2.common.app.presenters.YTSignInPresenter.instance(activity).start();
+            }
+
+            @Override
+            public void onManageAccounts() {
+                AccountSettingsPresenter.instance(activity).show();
+            }
+
+            @Override
+            public void onDismiss() {
+                unhold();
+            }
+        }).show(accounts, icons);
     }
 
     private void appendAccountSelection(List<Account> accounts, List<Drawable> icons, AppDialogPresenter settingsPresenter) {

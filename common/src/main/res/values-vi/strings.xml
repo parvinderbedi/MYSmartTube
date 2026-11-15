@@ -770,4 +770,7 @@
     <string name="mytube_player_quality">Chất lượng</string>
     <string name="mytube_player_captions">Phụ đề</string>
     <string name="mytube_player_speed">Tốc độ phát</string>
+    <string name="mytube_whos_watching">Ai đang xem?</string>
+    <string name="mytube_watch_as_guest">Xem với tư cách khách</string>
+    <string name="mytube_manage_accounts">Quản lý tài khoản</string>
 </resources>

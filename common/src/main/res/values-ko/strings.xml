@@ -770,4 +770,7 @@
     <string name="mytube_player_quality">화질</string>
     <string name="mytube_player_captions">자막</string>
     <string name="mytube_player_speed">재생 속도</string>
+    <string name="mytube_whos_watching">누가 시청 중인가요?</string>
+    <string name="mytube_watch_as_guest">게스트로 시청</string>
+    <string name="mytube_manage_accounts">계정 관리</string>
 </resources>

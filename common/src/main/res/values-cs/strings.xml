@@ -772,6 +772,9 @@
     <string name="mytube_player_quality">Kvalita</string>
     <string name="mytube_player_captions">Titulky</string>
     <string name="mytube_player_speed">Rychlost přehrávání</string>
+    <string name="mytube_whos_watching">Kdo se dívá?</string>
+    <string name="mytube_watch_as_guest">Sledovat jako host</string>
+    <string name="mytube_manage_accounts">Spravovat účty</string>
 </resources>
 
 

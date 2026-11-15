@@ -772,4 +772,7 @@
     <string name="mytube_player_quality">Qualidade</string>
     <string name="mytube_player_captions">Legendas</string>
     <string name="mytube_player_speed">Velocidade de reprodução</string>
+    <string name="mytube_whos_watching">Quem está a ver?</string>
+    <string name="mytube_watch_as_guest">Ver como convidado</string>
+    <string name="mytube_manage_accounts">Gerir contas</string>
 </resources>

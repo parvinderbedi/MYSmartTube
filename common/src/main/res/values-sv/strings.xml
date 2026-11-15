@@ -772,4 +772,7 @@
     <string name="mytube_player_quality">Kvalitet</string>
     <string name="mytube_player_captions">Undertexter</string>
     <string name="mytube_player_speed">Uppspelningshastighet</string>
+    <string name="mytube_whos_watching">Vem tittar?</string>
+    <string name="mytube_watch_as_guest">Titta som gäst</string>
+    <string name="mytube_manage_accounts">Hantera konton</string>
 </resources>

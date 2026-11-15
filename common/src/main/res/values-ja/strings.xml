@@ -770,4 +770,7 @@
     <string name="mytube_player_quality">画質</string>
     <string name="mytube_player_captions">字幕</string>
     <string name="mytube_player_speed">再生速度</string>
+    <string name="mytube_whos_watching">視聴しているのは誰ですか？</string>
+    <string name="mytube_watch_as_guest">ゲストとして視聴</string>
+    <string name="mytube_manage_accounts">アカウントを管理</string>
 </resources>

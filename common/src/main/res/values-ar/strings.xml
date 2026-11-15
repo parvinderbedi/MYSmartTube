@@ -772,4 +772,7 @@
     <string name="mytube_player_quality">الجودة</string>
     <string name="mytube_player_captions">الترجمة</string>
     <string name="mytube_player_speed">سرعة التشغيل</string>
+    <string name="mytube_whos_watching">من يشاهد؟</string>
+    <string name="mytube_watch_as_guest">المشاهدة كضيف</string>
+    <string name="mytube_manage_accounts">إدارة الحسابات</string>
 </resources>

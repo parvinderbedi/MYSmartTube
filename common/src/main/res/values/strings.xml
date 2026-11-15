@@ -159,6 +159,9 @@
     <string name="mytube_header_live">Live</string>
     <string name="mytube_up_next">Up next</string>
     <string name="mytube_add_account">Add account</string>
+    <string name="mytube_whos_watching">Who\'s watching?</string>
+    <string name="mytube_watch_as_guest">Watch as guest</string>
+    <string name="mytube_manage_accounts">Manage accounts</string>
     <string name="mytube_subscriptions_all">All</string>
     <string name="mytube_player_settings">Settings</string>
     <string name="mytube_player_quality">Quality</string>

@@ -770,4 +770,7 @@
     <string name="mytube_player_quality">畫質</string>
     <string name="mytube_player_captions">字幕</string>
     <string name="mytube_player_speed">播放速度</string>
+    <string name="mytube_whos_watching">誰在觀看？</string>
+    <string name="mytube_watch_as_guest">以訪客身分觀看</string>
+    <string name="mytube_manage_accounts">管理帳戶</string>
 </resources>

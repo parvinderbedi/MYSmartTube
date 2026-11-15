@@ -770,4 +770,7 @@
     <string name="mytube_player_quality">Kualitas</string>
     <string name="mytube_player_captions">Teks</string>
     <string name="mytube_player_speed">Kecepatan pemutaran</string>
+    <string name="mytube_whos_watching">Siapa yang menonton?</string>
+    <string name="mytube_watch_as_guest">Tonton sebagai tamu</string>
+    <string name="mytube_manage_accounts">Kelola akun</string>
 </resources>

@@ -772,4 +772,7 @@
     <string name="mytube_player_quality">क्वालिटी</string>
     <string name="mytube_player_captions">कैप्शन</string>
     <string name="mytube_player_speed">वीडियो चलाने की स्पीड</string>
+    <string name="mytube_whos_watching">कौन देख रहा है?</string>
+    <string name="mytube_watch_as_guest">मेहमान के तौर पर देखें</string>
+    <string name="mytube_manage_accounts">खाते मैनेज करें</string>
 </resources>

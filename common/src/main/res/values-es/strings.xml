@@ -772,4 +772,7 @@
     <string name="mytube_player_quality">Calidad</string>
     <string name="mytube_player_captions">Subtítulos</string>
     <string name="mytube_player_speed">Velocidad de reproducción</string>
+    <string name="mytube_whos_watching">¿Quién está viendo?</string>
+    <string name="mytube_watch_as_guest">Ver como invitado</string>
+    <string name="mytube_manage_accounts">Gestionar cuentas</string>
 </resources>

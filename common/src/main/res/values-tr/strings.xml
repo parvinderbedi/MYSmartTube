@@ -772,4 +772,7 @@
     <string name="mytube_player_quality">Kalite</string>
     <string name="mytube_player_captions">Altyazılar</string>
     <string name="mytube_player_speed">Oynatma hızı</string>
+    <string name="mytube_whos_watching">Kim izliyor?</string>
+    <string name="mytube_watch_as_guest">Misafir olarak izle</string>
+    <string name="mytube_manage_accounts">Hesapları yönet</string>
 </resources>
